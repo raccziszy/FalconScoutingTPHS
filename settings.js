@@ -88,7 +88,7 @@ let settings = {
     //cube cone buttons
     {
       "label": "Tele Amp",
-      "trigger": "w", 
+      "trigger": "e", 
       "columnStart": 1,
       "columnEnd": 2,
       "rowStart": 1,
@@ -98,7 +98,7 @@ let settings = {
     },
     {
       "label": "Tele Speaker",
-      "trigger": "e", 
+      "trigger": "r", 
       "columnStart": 2,
       "columnEnd": 3,
       "rowStart": 1,
@@ -118,7 +118,7 @@ let settings = {
     },
     {
       "label": "Avg Cycle time",
-      "trigger": "s", 
+      "trigger": "c", 
       "columnStart": 1,
       "columnEnd": 2,
       "rowStart": 4,
@@ -126,6 +126,7 @@ let settings = {
       "writeLoc": 8,
       "writeType": "inc"
     },
+    //ADD HERE !!!!!!!
     {
       "label": "Tele Miss S",
       "trigger": "f", 
@@ -138,7 +139,7 @@ let settings = {
     },
     {
       "label": "Trap note",
-      "trigger": "r", 
+      "trigger": "u", 
       "columnStart": 3,
       "columnEnd": 4,
       "rowStart": 1,
@@ -149,7 +150,7 @@ let settings = {
     //scoring buttons end
     {
       "label": "Penalty",
-      "trigger": "i", 
+      "trigger": "o", 
       "columnStart": 3,
       "columnEnd": 5,
       "rowStart": 2,
@@ -159,7 +160,7 @@ let settings = {
     },
     {
       "label": "Forced Misses",
-      "trigger": "c", 
+      "trigger": "v", 
       "columnStart": 2,
       "columnEnd": 3,
       "rowStart": 4,
@@ -169,7 +170,7 @@ let settings = {
     },
     {
       "label": "Spotlight",
-      "trigger": "h", 
+      "trigger": "k", 
       "columnStart": 3,
       "columnEnd": 4,
       "rowStart": 4,
@@ -186,12 +187,12 @@ let settings = {
       "rowEnd": 4,
       "writeLoc": 12,
       "writeType": "cycG",
-      "cycGOptions": [0, 2, 3],
+      "cycGOptions": [0, 1, 3],
       "writeCycGOptions": 3
     },
     {
       "label": "Oof Time",
-      "trigger": "k", 
+      "trigger": "l", 
       "columnStart": 4,
       "columnEnd": 5,
       "rowStart": 3,
@@ -201,7 +202,7 @@ let settings = {
     },
     {
       "label": "Defense",
-      "trigger": "u", 
+      "trigger": "i", 
       "columnStart": 4,
       "columnEnd": 5,
       "rowStart": 1,

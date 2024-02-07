@@ -333,6 +333,9 @@ function generateMainPage(stage){
                 dataValues[settings.after[i].writeLoc] = settings.after[i].cycOptions[0];
                 
             }
+
+            //if(settings.after[i].writeType == "acyc"){}
+            
             if(settings.after[i].writeType == "bool"){
                 const container = document.createElement("div");
                 container.classList.add("switchContainer");
