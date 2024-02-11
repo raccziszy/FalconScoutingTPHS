@@ -334,7 +334,7 @@ function generateMainPage(stage){
                 
             }
 
-            //if(settings.after[i].writeType == "acyc"){}
+          
             
             if(settings.after[i].writeType == "bool"){
                 const container = document.createElement("div");
@@ -821,7 +821,7 @@ function clickEvt(type, loc, rev = null){
         if(rev == "value"){
             dataValues[rowContent[selected].writeLoc] = document.getElementById("editTextBox").value
             document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataValues[rowContent[selected].writeLoc]
-            dataValues[rowContent[selected].writeLoc]++; //hacky bugfix 2: electric boogaloo (why does this work bro)
+            dataValues[rowContent[selected].writeLoc]++; //hacky bugfix 2: electric boogaloo (why does this work bro) 
             dataValues[rowContent[selected].writeLoc]--;
         }
 
@@ -986,7 +986,8 @@ function resetGame(){
 
     //dataValues = [false, 0, 0, 0, 0, 0, 0, false, null, 0, 0, false, "", false, "", "", ""]
     //dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0,0,"","",""];
-    dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
+    //dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
+    dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
     //dataLabels = [ "Mobility", "Auto High Cube", "Auto Mid Cube", "Auto Low Cube", "Auto High Cone", "Auto Mid Cone", "Auto Low Cone", "Auto Fumbled", "Auto Climb", "High Cube", "Mid Cube", "Low Cube",  "High Cone", "Mid Cone", "Low Cone", "Fumbled", "Climb", "Park","Defense Time", "Penalty Count", "Oof Time", "Climb QATA", "Link QATA", "QATA", "Drivetrain"];
 
     //clearing main page and generating the displaybar

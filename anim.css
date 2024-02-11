@@ -1,10 +1,10 @@
 :root{
     --mainColor: #f2efed;
-    --bgColor: #1c1b1d;
-    --accentColor: #deaf9d;
-    --highlightColor: #4e3e3e;
+    --bgColor: #1d1b1c;
+    --accentColor: #e4ffb5;
+    --highlightColor: #2d3531;
     --errColor: #bf616a;
-    --altBgColor:#262223;
+    --altBgColor:rgb(46, 39, 43);
 
     --mainFont: 'Inter', sans-serif;
     --secondFont: 'Roboto Mono', monospace;

@@ -21,7 +21,7 @@ let settings = {
       "columnEnd": 5,
       "rowStart": 3,
       "rowEnd": 5,
-      "writeLoc": 17,
+      "writeLoc": 16,
       "writeType": "inc"
     },
     {
@@ -103,7 +103,7 @@ let settings = {
       "columnEnd": 3,
       "rowStart": 1,
       "rowEnd": 3,
-      "writeLoc": 9,
+      "writeLoc": 8,
       "writeType": "int"
     },
     {
@@ -117,17 +117,6 @@ let settings = {
       "writeType": "int"
     },
     {
-      "label": "Avg Cycle time",
-      "trigger": "c", 
-      "columnStart": 1,
-      "columnEnd": 2,
-      "rowStart": 4,
-      "rowEnd": 5,
-      "writeLoc": 8,
-      "writeType": "inc"
-    },
-    //ADD HERE !!!!!!!
-    {
       "label": "Tele Miss S",
       "trigger": "f", 
       "columnStart": 2,
@@ -138,13 +127,13 @@ let settings = {
       "writeType": "int"
     },
     {
-      "label": "Trap note",
+      "label": "Trap Note",
       "trigger": "u", 
       "columnStart": 3,
       "columnEnd": 4,
       "rowStart": 1,
       "rowEnd": 2,
-      "writeLoc": 11,
+      "writeLoc": 10,
       "writeType": "int"
     },
     //scoring buttons end
@@ -155,17 +144,17 @@ let settings = {
       "columnEnd": 5,
       "rowStart": 2,
       "rowEnd": 3,
-      "writeLoc": 19,
+      "writeLoc": 18,
       "writeType": "int"
     },
     {
       "label": "Forced Misses",
       "trigger": "v", 
-      "columnStart": 2,
+      "columnStart": 1,
       "columnEnd": 3,
       "rowStart": 4,
       "rowEnd": 5,
-      "writeLoc": 10,
+      "writeLoc": 9,
       "writeType": "int"
     },
     {
@@ -175,7 +164,7 @@ let settings = {
       "columnEnd": 4,
       "rowStart": 4,
       "rowEnd": 5,
-      "writeLoc": 13,
+      "writeLoc": 12,
       "writeType": "bool"
     },
     {
@@ -185,7 +174,7 @@ let settings = {
       "columnEnd": 4,
       "rowStart": 3,
       "rowEnd": 4,
-      "writeLoc": 12,
+      "writeLoc": 11,
       "writeType": "cycG",
       "cycGOptions": [0, 1, 3],
       "writeCycGOptions": 3
@@ -197,7 +186,7 @@ let settings = {
       "columnEnd": 5,
       "rowStart": 3,
       "rowEnd": 5,
-      "writeLoc": 17,
+      "writeLoc": 16,
       "writeType": "inc"
     },
     {
@@ -207,7 +196,7 @@ let settings = {
       "columnEnd": 5,
       "rowStart": 1,
       "rowEnd": 2,
-      "writeLoc": 14, 
+      "writeLoc": 13, 
       "writeType": "inc"
     }
   ], 
@@ -223,19 +212,19 @@ let settings = {
 
     {
       "label": "Climbing Capabilities?",
-      "writeLoc": 15,
+      "writeLoc": 14,
       "writeType": "str",
       "placeholder": "e.g. harmonized? speed? good trap+climb?"
     },
     {
       "label": "Defense Description", 
-      "writeLoc": 16, 
+      "writeLoc": 15, 
       "writeType": "str",
       "placeholder": "how did they play defense? push power? speed?"
     },
     {
       "label": "QATA",
-      "writeLoc": 18,
+      "writeLoc": 17,
       "writeType": "str",
       "placeholder": "e.g. how are they scoring? speed? skill?"
     }
@@ -243,25 +232,25 @@ let settings = {
   "start": [
     {
       "label": "Scout ID",
-      "writeLoc": 21,
+      "writeLoc": 20,
       "writeType": "strBegin",
       "placeholder": "your team # + your name"
     },
     {
       "label": "Team Number",
-      "writeLoc": 22,
+      "writeLoc": 21,
       "writeType": "strBegin",
       "placeholder": "# of the team you are scouting"
     },
     {
       "label": "Match Number",
-      "writeLoc": 20,
+      "writeLoc": 19,
       "writeType": "strBegin",
       "placeholder": "current match #"
     },
     {
       "label": "Team Position",
-      "writeLoc": 23,
+      "writeLoc": 22,
       "writeType": "strBegin",
       "placeholder": "1, 2, or 3"
     }
@@ -270,9 +259,9 @@ let settings = {
 }
 
 //let dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0,0,"","",""];
-let dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
+let dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
 
-let dataLabels = ["leave", "Auto amp", "Auto Miss A", "Auto Speaker", "Auto Miss S", "Tele Miss S", "Tele Amp", "Tele Miss A", "Avg Cycle Time", "Tele Speaker", "Forced Misses", "Trap Note", "Climb Level", "Spotlight", "Defense", "Climbing Capabilites?", "Defense Description", "Oof Time", "QATA", "Penalty"]
+let dataLabels = ["leave", "Auto amp", "Auto Miss A", "Auto Speaker", "Auto Miss S", "Tele Miss S", "Tele Amp", "Tele Miss A", "Tele Speaker", "Forced Misses", "Trap Note", "Climb Level", "Spotlight", "Defense", "Climbing Capabilites?", "Defense Description", "Oof Time", "QATA", "Penalty"]
 // 0: Leave
 // 1: Auto Amp
 // 2: Auto Miss A
