@@ -51,6 +51,17 @@ body{
     transform: none;
 }
 
+#autoContainer {
+  margin: auto;
+  margin-top: 10vh;
+  height: 90vh;
+  width: 50vw;
+}
+
+img {
+  width:100%;
+}
+
 #initContainer{
     height: 90vh;
     width: 50vw;
@@ -103,6 +114,10 @@ body{
     font-family: "Roboto Mono", monospace;
     color: var(--accentColor);
 
+}
+
+#initPage {
+  display: none;
 }
 
 #initPositionContainer{
