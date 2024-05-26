@@ -51,15 +51,26 @@ body{
     transform: none;
 }
 
-#autoContainer {
-  margin: auto;
-  margin-top: 10vh;
-  height: 90vh;
-  width: 50vw;
+#field{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin-bottom: 1rem;
+  position: absolute;
+  z-index: -1;
 }
 
-img {
-  width:100%;
+#autoContainer {
+  margin: auto;
+  margin-top: 100px;
+  margin-top: 5%;
+  height: 90vh;
+  width: 50vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #initContainer{
@@ -116,7 +127,7 @@ img {
 
 }
 
-#initPage {
+#autoPage {
   display: none;
 }
 
@@ -531,6 +542,14 @@ img {
     margin-right: 1vw;
     margin-bottom: 0.6vw;
     z-index: 1;
+}
+
+.autoButton {
+  position: relative;
+  color: var(--mainColor);
+  background-color: var(--altBgColor);
+  border-radius: 4px;
+  height: 20px;
 }
 
 .mainPageCounter{

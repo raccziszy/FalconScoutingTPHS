@@ -1,3 +1,5 @@
+// import autoSettings from "./autoSettings.json";
+
 //variable declarations
 let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 150, delay = true, rowContent = [], notesToggled = false, matchInfo = [], allianceColor = "n";
 
@@ -195,43 +197,104 @@ window.addEventListener('keydown', function (keystroke) {
 }
 )
 
+const field = document.createElement("img");
+field.src = "img/newField.png";
+field.id = "field";
+const autoData = autoSettingsCopy;
+const fieldLength = autoData.get("fieldLength");
+var autoPath = [];
+var autoHistory = [];
+// const autoData = new Map(JSON.parse(JSON.stringify(autoSettings)));
+
+function createAuto(page) {
+    const autoPage = document.getElementById("autoPage");   
+    autoPage.innerHTML = "";
+    autoPage.style.display = "flex";
+    const box = document.createElement("div");
+    box.id = "autoContainer";
+    const buttons = [];
+    box.appendChild(field);
+    const data = autoData.get(page);
+    const pixelsPerMeter = field.width / fieldLength;
+    for (let i = 0; i < data.points.length; i++) {
+        const point = data.points[i];
+        if (data.type == "remove" && autoPath.includes(point.label)) continue;
+        const pointBox = document.createElement("button");
+        pointBox.innerHTML = point.label;
+        pointBox.id = point.label;
+        pointBox.classList.add("autoButton");
+        pointBox.addEventListener("click", ()=> {
+            createAuto(point.next);
+            autoPath.push(point.label);
+            autoHistory.push(page);
+        });
+        box.appendChild(pointBox, false);
+        buttons.push(point);
+    }
+    autoPage.appendChild(box);
+    let widthOffset = 0;
+    for (let i = 0; i < buttons.length; i++) {
+        const point = buttons[i];
+        const pointBox = document.getElementById(point.label);
+        const heightOffset = pointBox.offsetHeight;
+        const top = field.height - point.y * pixelsPerMeter - heightOffset / 2;
+        const left = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
+        pointBox.style.top = top + "px";
+        pointBox.style.left = left + "px";
+        widthOffset += pointBox.offsetWidth;
+    }
+    console.log(autoPath);
+    console.log(autoHistory);
+    //To do:
+    /**
+     * Find Coords
+     * Draw arrows?
+     * Add back button
+     * Add continue button
+     * Log data?
+     */
+}
+
 //reads settings.js file, generates HTML for the app using that info
 function generateMainPage(stage){
     document.getElementById("display-match").innerHTML = "Match:  " + matchNum;
     document.getElementById("display-team").innerHTML = "Team: " + teamNum;
     if(stage == "auto"){
-        for(i=0; i<settings.auto.length; i++){
-            const box = document.createElement("div")
-            box.innerHTML = settings.auto[i].label;
-            box.classList.add("mainPageBox");
-            box.style.gridColumnStart = settings.auto[i].columnStart;
-            box.style.gridColumnEnd = settings.auto[i].columnEnd;
-            box.style.gridRowStart = settings.auto[i].rowStart;
-            box.style.gridRowEnd = settings.auto[i].rowEnd;
-            let wType = settings.auto[i].writeType;
-            let wLoc = settings.auto[i].writeLoc;
-            box.id = "box" + wLoc
-            box.addEventListener("click", ()=>clickEvt(wType, wLoc))
-            document.getElementById("mainPage").appendChild(box);
+        autoPath = [];
+        autoHistory = [];
+        createAuto("starting", true);
+        // for(i=0; i<settings.auto.length; i++){
+        //     const box = document.createElement("div")
+        //     box.innerHTML = settings.auto[i].label;
+        //     box.classList.add("mainPageBox");
+        //     box.style.gridColumnStart = settings.auto[i].columnStart;
+        //     box.style.gridColumnEnd = settings.auto[i].columnEnd;
+        //     box.style.gridRowStart = settings.auto[i].rowStart;
+        //     box.style.gridRowEnd = settings.auto[i].rowEnd;
+        //     let wType = settings.auto[i].writeType;
+        //     let wLoc = settings.auto[i].writeLoc;
+        //     box.id = "box" + wLoc
+        //     box.addEventListener("click", ()=>clickEvt(wType, wLoc))
+        //     document.getElementById("mainPage").appendChild(box);
 
-            const boxLabel = document.createElement("div");
-            boxLabel.classList.add("mainPageLabel");
-            boxLabel.style.gridColumn = (settings.auto[i].columnEnd-1) + "/" + (settings.auto[i].columnEnd-1);
-            boxLabel.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
-            boxLabel.innerHTML = settings.auto[i].trigger.toUpperCase()
-            boxLabel.addEventListener("click", ()=>clickEvt(wType, wLoc))
-            document.getElementById("mainPage").appendChild(boxLabel);
+        //     const boxLabel = document.createElement("div");
+        //     boxLabel.classList.add("mainPageLabel");
+        //     boxLabel.style.gridColumn = (settings.auto[i].columnEnd-1) + "/" + (settings.auto[i].columnEnd-1);
+        //     boxLabel.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
+        //     boxLabel.innerHTML = settings.auto[i].trigger.toUpperCase()
+        //     boxLabel.addEventListener("click", ()=>clickEvt(wType, wLoc))
+        //     document.getElementById("mainPage").appendChild(boxLabel);
 
-            const boxCount = document.createElement("div");
-            boxCount.classList.add("mainPageCounter");
-            boxCount.id = "label" + wLoc;
-            boxCount.innerHTML = dataValues[wLoc];
-            boxCount.style.gridColumn = settings.auto[i].columnStart + "/" + settings.auto[i].columnStart;
-            boxCount.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
-            boxCount.addEventListener("click", ()=>clickEvt(wType, wLoc))
-            document.getElementById("mainPage").appendChild(boxCount);
+        //     const boxCount = document.createElement("div");
+        //     boxCount.classList.add("mainPageCounter");
+        //     boxCount.id = "label" + wLoc;
+        //     boxCount.innerHTML = dataValues[wLoc];
+        //     boxCount.style.gridColumn = settings.auto[i].columnStart + "/" + settings.auto[i].columnStart;
+        //     boxCount.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
+        //     boxCount.addEventListener("click", ()=>clickEvt(wType, wLoc))
+        //     document.getElementById("mainPage").appendChild(boxCount);
             
-        }
+        // }
     }
     if(stage == "tele"){
         for(i=0; i<settings.tele.length; i++){
@@ -951,12 +1014,12 @@ function transition(i){
     }
     if(i==2){
         // document.getElementById("mainPage").textContent = '';
-        let removeElem = (settings.auto.length)*3        
-        for(let i=0; i<removeElem; i++){
+        // let removeElem = (settings.auto.length)*3        
+        // for(let i=0; i<removeElem; i++){
             
-            mainPageElem = document.getElementById("mainPage");
-            mainPageElem.removeChild(mainPageElem.lastElementChild)
-        }
+        //     mainPageElem = document.getElementById("mainPage");
+        //     mainPageElem.removeChild(mainPageElem.lastElementChild)
+        // }
         generateMainPage("tele")
         state = "tele"
     }
