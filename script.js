@@ -4,7 +4,7 @@
 let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 150, delay = true, rowContent = [], notesToggled = false, matchInfo = [], allianceColor = "n";
 
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
-let testing = false; // DISABLES INTRO PAGE CHECKS IF TRUE
+let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 
 let startAudio = new Audio("sfx/start.wav")
 
@@ -215,7 +215,6 @@ function createAuto(page) {
     const buttons = [];
     box.appendChild(field);
     const data = autoData.get(page);
-    const pixelsPerMeter = field.width / fieldLength;
     for (let i = 0; i < data.points.length; i++) {
         const point = data.points[i];
         if (data.type == "remove" && autoPath.includes(point.label)) continue;
@@ -223,7 +222,13 @@ function createAuto(page) {
         pointBox.innerHTML = point.label;
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
+        console.log("addEventListener");
         pointBox.addEventListener("click", ()=> {
+            console.log(data.type);
+            if (data.type == "start") {
+                timerStart()
+                startAudio.play();
+            }
             createAuto(point.next);
             autoPath.push(point.label);
             autoHistory.push(page);
@@ -232,12 +237,12 @@ function createAuto(page) {
         buttons.push(point);
     }
     autoPage.appendChild(box);
+    const pixelsPerMeter = field.width / fieldLength;
     let widthOffset = 0;
     for (let i = 0; i < buttons.length; i++) {
         const point = buttons[i];
         const pointBox = document.getElementById(point.label);
-        const heightOffset = pointBox.offsetHeight;
-        const top = field.height - point.y * pixelsPerMeter - heightOffset / 2;
+        const top = field.height - point.y * pixelsPerMeter - pointBox.offsetHeight / 2;
         const left = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
         pointBox.style.top = top + "px";
         pointBox.style.left = left + "px";
@@ -260,43 +265,15 @@ function generateMainPage(stage){
     document.getElementById("display-match").innerHTML = "Match:  " + matchNum;
     document.getElementById("display-team").innerHTML = "Team: " + teamNum;
     if(stage == "auto"){
+        document.getElementById("initPage").style.display = "none";
+        document.getElementById("mainPage").style.display = "grid";
         autoPath = [];
         autoHistory = [];
-        createAuto("starting", true);
-        // for(i=0; i<settings.auto.length; i++){
-        //     const box = document.createElement("div")
-        //     box.innerHTML = settings.auto[i].label;
-        //     box.classList.add("mainPageBox");
-        //     box.style.gridColumnStart = settings.auto[i].columnStart;
-        //     box.style.gridColumnEnd = settings.auto[i].columnEnd;
-        //     box.style.gridRowStart = settings.auto[i].rowStart;
-        //     box.style.gridRowEnd = settings.auto[i].rowEnd;
-        //     let wType = settings.auto[i].writeType;
-        //     let wLoc = settings.auto[i].writeLoc;
-        //     box.id = "box" + wLoc
-        //     box.addEventListener("click", ()=>clickEvt(wType, wLoc))
-        //     document.getElementById("mainPage").appendChild(box);
-
-        //     const boxLabel = document.createElement("div");
-        //     boxLabel.classList.add("mainPageLabel");
-        //     boxLabel.style.gridColumn = (settings.auto[i].columnEnd-1) + "/" + (settings.auto[i].columnEnd-1);
-        //     boxLabel.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
-        //     boxLabel.innerHTML = settings.auto[i].trigger.toUpperCase()
-        //     boxLabel.addEventListener("click", ()=>clickEvt(wType, wLoc))
-        //     document.getElementById("mainPage").appendChild(boxLabel);
-
-        //     const boxCount = document.createElement("div");
-        //     boxCount.classList.add("mainPageCounter");
-        //     boxCount.id = "label" + wLoc;
-        //     boxCount.innerHTML = dataValues[wLoc];
-        //     boxCount.style.gridColumn = settings.auto[i].columnStart + "/" + settings.auto[i].columnStart;
-        //     boxCount.style.gridRow = (settings.auto[i].rowEnd-1) + "/" + (settings.auto[i].rowEnd-1);
-        //     boxCount.addEventListener("click", ()=>clickEvt(wType, wLoc))
-        //     document.getElementById("mainPage").appendChild(boxCount);
-            
-        // }
+        createAuto("starting");
+        state = "auto";
     }
     if(stage == "tele"){
+        document.getElementById("autoPage").style.display = "none";
         for(i=0; i<settings.tele.length; i++){
             const box = document.createElement("div")
             box.innerHTML = settings.tele[i].label;
@@ -329,6 +306,7 @@ function generateMainPage(stage){
             document.getElementById("mainPage").appendChild(boxCount);
         }
         console.log("tele generated");
+        state = "tele"
     }
     if(stage == "after"){
         document.getElementById("displayBar").style.display = "none"
@@ -1005,23 +983,10 @@ function transition(i){
 
     }
     if(i==1 && state == "standby"){
-        timerStart()
-        startAudio.play();
-        document.getElementById("initPage").style.display = "none";
-        document.getElementById("mainPage").style.display = "grid";
         generateMainPage("auto")
-        state = "auto";
     }
     if(i==2){
-        // document.getElementById("mainPage").textContent = '';
-        // let removeElem = (settings.auto.length)*3        
-        // for(let i=0; i<removeElem; i++){
-            
-        //     mainPageElem = document.getElementById("mainPage");
-        //     mainPageElem.removeChild(mainPageElem.lastElementChild)
-        // }
         generateMainPage("tele")
-        state = "tele"
     }
     if(i == 4  && state == "after"){
         let removeElem = (settings.tele.length)*3        

@@ -52,10 +52,6 @@ body{
 }
 
 #field{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 50%;
   margin-bottom: 1rem;
   position: absolute;
@@ -64,13 +60,8 @@ body{
 
 #autoContainer {
   margin: auto;
-  margin-top: 100px;
   margin-top: 5%;
-  height: 90vh;
   width: 50vw;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 #initContainer{
@@ -129,6 +120,9 @@ body{
 
 #autoPage {
   display: none;
+  position: relative;
+  height: 0px;
+  z-index: 11;
 }
 
 #initPositionContainer{
@@ -549,7 +543,9 @@ body{
   color: var(--mainColor);
   background-color: var(--altBgColor);
   border-radius: 4px;
-  height: 20px;
+  z-index: 1;
+  /* height: 20px;
+  font-size: 1rem; */
 }
 
 .mainPageCounter{
@@ -952,7 +948,7 @@ body{
 
         backdrop-filter: blur(4px);
         background-color:rgba(0, 0, 0, 0.5);
-        z-index: 10;
+        z-index: 12;
         position: absolute;
     }
     #notes{
@@ -966,7 +962,7 @@ body{
         font-family: "Roboto Mono", monospace;
         font-size: 1rem;
         padding: 1vh;
-        z-index: 10;
+        z-index: 12;
     }
 
 /* The Modal (background) */
