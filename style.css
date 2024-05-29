@@ -53,7 +53,7 @@ body{
 
 #field{
   width: 50%;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   position: absolute;
   z-index: -1;
 }
@@ -62,6 +62,7 @@ body{
   margin: auto;
   margin-top: 5%;
   width: 50vw;
+  height: 0px;
 }
 
 #initContainer{
@@ -538,14 +539,25 @@ body{
     z-index: 1;
 }
 
+#backButton {
+  width: 10em;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: "Roboto Mono", monospace;
+  margin: auto;
+}
+
 .autoButton {
   position: relative;
   color: var(--mainColor);
   background-color: var(--altBgColor);
-  border-radius: 4px;
+  border-radius: 14px;
   z-index: 1;
-  /* height: 20px;
-  font-size: 1rem; */
+}
+
+.autoButton:hover {
+  cursor: pointer;
+  background-color: var(--highlightColor);
 }
 
 .mainPageCounter{

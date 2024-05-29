@@ -204,6 +204,7 @@ const autoData = autoSettingsCopy;
 const fieldLength = autoData.get("fieldLength");
 var autoPath = [];
 var autoHistory = [];
+var pointHistory = [];
 // const autoData = new Map(JSON.parse(JSON.stringify(autoSettings)));
 
 function createAuto(page) {
@@ -212,8 +213,12 @@ function createAuto(page) {
     autoPage.style.display = "flex";
     const box = document.createElement("div");
     box.id = "autoContainer";
-    const buttons = [];
+    const canvas = document.createElement("canvas");
+    autoPage.appendChild(box);
+    box.appendChild(canvas);
     box.appendChild(field);
+    const pixelsPerMeter = field.width / fieldLength;
+    let widthOffset = 0;
     const data = autoData.get(page);
     for (let i = 0; i < data.points.length; i++) {
         const point = data.points[i];
@@ -222,42 +227,95 @@ function createAuto(page) {
         pointBox.innerHTML = point.label;
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
-        console.log("addEventListener");
         pointBox.addEventListener("click", ()=> {
             console.log(data.type);
             if (data.type == "start") {
                 timerStart()
                 startAudio.play();
             }
-            createAuto(point.next);
             autoPath.push(point.label);
             autoHistory.push(page);
+            if ("coord" in point) {
+                pointHistory.push(point.coord);
+            }
+            else {
+                pointHistory.push([{x: point.x, y: point.y}]);
+            }
+            createAuto(point.next);
         });
         box.appendChild(pointBox, false);
-        buttons.push(point);
-    }
-    autoPage.appendChild(box);
-    const pixelsPerMeter = field.width / fieldLength;
-    let widthOffset = 0;
-    for (let i = 0; i < buttons.length; i++) {
-        const point = buttons[i];
-        const pointBox = document.getElementById(point.label);
+
         const top = field.height - point.y * pixelsPerMeter - pointBox.offsetHeight / 2;
         const left = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
         pointBox.style.top = top + "px";
         pointBox.style.left = left + "px";
         widthOffset += pointBox.offsetWidth;
     }
-    console.log(autoPath);
-    console.log(autoHistory);
+    const back = document.createElement("p");
+    back.innerHTML = "BACK";
+    back.id = "backButton";
+    back.classList.add("autoButton");
+    back.style.top = field.height + "px";
+    back.addEventListener("click", backupPoint);
+    box.appendChild(back);
+
+    canvas.width = field.width;
+    canvas.height = field.height;
+    canvas.style.position = "absolute";
+    canvas.style.zIndex = 1;
+
+    drawLines(canvas, pixelsPerMeter);
+
     //To do:
     /**
-     * Find Coords
      * Draw arrows?
-     * Add back button
-     * Add continue button
+     * Add continue button - no
      * Log data?
      */
+}
+
+function drawLines(canvas, pixelsPerMeter) {
+    // if (pointHistory.length < 2) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 1; i < pointHistory.length; i++) {
+        const point = pointHistory[i];
+        const isMoving = i % 2 == 0;
+        const prev = isMoving ? pointHistory[i - 2] : pointHistory[i - 1];
+        let prevPoint = prev[prev.length - 1];
+        ctx.beginPath();
+        for (let j = 0; j < point.length; j++) {
+            const x = (allianceColor == "r" ? fieldLength - point[j].x : point[j].x) * pixelsPerMeter;
+            const y = canvas.height - point[j].y * pixelsPerMeter
+            const xStart = (allianceColor == "r" ? fieldLength - prevPoint.x: prevPoint.x) * pixelsPerMeter;
+            const yStart = canvas.height - prevPoint.y * pixelsPerMeter;
+            ctx.moveTo(xStart, yStart);
+            if (isMoving) {
+                ctx.strokeStyle = allianceColor == "r" ? "red" : "blue";
+                ctx.lineWidth = 3;
+            }
+            else {
+                ctx.strokeStyle = (autoPath[i].toLowerCase().indexOf("miss") == -1) ? "green" : "yellow";
+                ctx.lineWidth = 1;
+            }
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            prevPoint = point[j];
+            if (i == pointHistory.length - 1) break;
+        }
+    }
+    // ctx.stroke();
+}
+
+function backupPoint() {
+    if (autoHistory.length == 0) return;
+    autoPath.pop();
+    pointHistory.pop();
+    createAuto(autoHistory.pop());
+    if (autoHistory.length == 0) {
+        clearInterval(timerFunction);
+        document.getElementById("display-timer").innerHTML = "";
+    }
 }
 
 //reads settings.js file, generates HTML for the app using that info
@@ -269,6 +327,7 @@ function generateMainPage(stage){
         document.getElementById("mainPage").style.display = "grid";
         autoPath = [];
         autoHistory = [];
+        pointHistory = [];
         createAuto("starting");
         state = "auto";
     }
