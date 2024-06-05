@@ -204,7 +204,6 @@ const autoData = autoSettingsCopy;
 const fieldLength = autoData.get("fieldLength");
 var autoPath = [];
 var autoHistory = [];
-var pointHistory = [];
 // const autoData = new Map(JSON.parse(JSON.stringify(autoSettings)));
 
 function createAuto(page) {
@@ -222,31 +221,26 @@ function createAuto(page) {
     const data = autoData.get(page);
     for (let i = 0; i < data.points.length; i++) {
         const point = data.points[i];
-        if (data.type == "remove" && autoPath.includes(point.label)) continue;
+        if (data.type == "remove" && autoPath.some(otherPoint => otherPoint.label == point.label)) continue;
         const pointBox = document.createElement("button");
         pointBox.innerHTML = point.label;
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
         pointBox.addEventListener("click", ()=> {
-            console.log(data.type);
             if (data.type == "start") {
                 timerStart()
                 startAudio.play();
+                resetAutoSettings();
             }
-            autoPath.push(point.label);
+            autoPath.push(point);
             autoHistory.push(page);
-            if ("coord" in point) {
-                pointHistory.push(point.coord);
-            }
-            else {
-                pointHistory.push([{x: point.x, y: point.y}]);
-            }
+            if (point.function != null) point.function();
             createAuto(point.next);
         });
         box.appendChild(pointBox, false);
-
-        const top = field.height - point.y * pixelsPerMeter - pointBox.offsetHeight / 2;
-        const left = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
+        const coord = geAbsPosition(point);
+        const top = field.height - coord.y * pixelsPerMeter - pointBox.offsetHeight / 2;
+        const left = coord.x * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
         pointBox.style.top = top + "px";
         pointBox.style.left = left + "px";
         widthOffset += pointBox.offsetWidth;
@@ -264,53 +258,109 @@ function createAuto(page) {
     canvas.style.position = "absolute";
     canvas.style.zIndex = 1;
 
-    drawLines(canvas, pixelsPerMeter);
+    drawPath(canvas, pixelsPerMeter);
 
     //To do:
     /**
-     * Draw arrows?
      * Add continue button - no
      * Log data?
      */
 }
 
-function drawLines(canvas, pixelsPerMeter) {
-    // if (pointHistory.length < 2) return;
+function geAbsPosition(point) {
+    const offset = getRelPosition(point, isRelative(point), autoPath.length);
+    if (point.position.toLowerCase().includes("quasi")) {
+        point.x = offset.x;
+        point.y = offset.y;
+        point.position = "absolute";
+    }
+    let x = (allianceColor == "r" ? fieldLength - offset.x : offset.x);
+    let y = offset.y;
+    return {x, y};
+}
+
+function getRelPosition(coord, relative, index) {
+    let x = coord.x;
+    let y = coord.y;
+    if (relative) {
+        const coord = getRelPosition(autoPath[index - 1], isRelative(autoPath[index - 1]), index - 1);
+        x += coord.x;
+        y += coord.y;
+    }
+    return {x, y};
+}
+
+function isRelative(point) {
+    return point.position.toLowerCase().includes("relative");
+}
+
+function getPrevPoint(index) {
+    for (let i = index - 1; i >= 0; i--) {
+        if (autoData.get(autoHistory[i]).isMoving) {
+            let coords = getCoords(autoPath[i], isRelative(autoPath[i]), i);
+            return coords[coords.length - 1];
+        }
+    }
+}
+
+function getCoords(point, index) {
+    let coords = "coord" in point ? point.coord : [{x: point.x, y: point.y}];
+    for (var c in coords) {
+        coords[c] = getRelPosition(coords[c], isRelative(point), index);
+    }
+    return coords;
+}
+
+function drawPath(canvas, pixelsPerMeter) {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 1; i < pointHistory.length; i++) {
-        const point = pointHistory[i];
-        const isMoving = i % 2 == 0;
-        const prev = isMoving ? pointHistory[i - 2] : pointHistory[i - 1];
-        let prevPoint = prev[prev.length - 1];
-        ctx.beginPath();
+    for (let i = 1; i < autoPath.length; i++) {
+        const page = autoData.get(autoHistory[i]);
+        if (!page.shouldDrawLine) continue;
+        const point = getCoords(autoPath[i], i);
+        const isMoving = autoData.get(autoHistory[i]).isMoving;
+        let prevPoint = getPrevPoint(i);
         for (let j = 0; j < point.length; j++) {
-            const x = (allianceColor == "r" ? fieldLength - point[j].x : point[j].x) * pixelsPerMeter;
-            const y = canvas.height - point[j].y * pixelsPerMeter
-            const xStart = (allianceColor == "r" ? fieldLength - prevPoint.x: prevPoint.x) * pixelsPerMeter;
-            const yStart = canvas.height - prevPoint.y * pixelsPerMeter;
-            ctx.moveTo(xStart, yStart);
             if (isMoving) {
                 ctx.strokeStyle = allianceColor == "r" ? "red" : "blue";
                 ctx.lineWidth = 3;
             }
             else {
-                ctx.strokeStyle = (autoPath[i].toLowerCase().indexOf("miss") == -1) ? "green" : "yellow";
+                ctx.strokeStyle = (autoPath[i].label.toLowerCase().indexOf("miss") == -1) ? "green" : "yellow";
                 ctx.lineWidth = 1;
             }
-            ctx.lineTo(x, y);
-            ctx.stroke();
+            drawLine(ctx, prevPoint, point[j], pixelsPerMeter);
             prevPoint = point[j];
-            if (i == pointHistory.length - 1) break;
+            if (i == autoPath.length - 1) break;
         }
     }
-    // ctx.stroke();
+}
+
+function drawLine(ctx, prevPoint, point, pixelsPerMeter) {
+    const x = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter;
+    const y = field.height - point.y * pixelsPerMeter
+    const xStart = (allianceColor == "r" ? fieldLength - prevPoint.x: prevPoint.x) * pixelsPerMeter;
+    const yStart = field.height - prevPoint.y * pixelsPerMeter;
+    const angle = Math.atan2(y - yStart, x - xStart);
+    const headLen = 10;
+
+    ctx.beginPath();
+    ctx.moveTo(xStart, yStart);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.lineTo(x - headLen * Math.cos(angle - Math.PI / 6), y - headLen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(x - headLen * Math.cos(angle + Math.PI / 6), y - headLen * Math.sin(angle + Math.PI / 6));
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.fill();
 }
 
 function backupPoint() {
     if (autoHistory.length == 0) return;
     autoPath.pop();
-    pointHistory.pop();
     createAuto(autoHistory.pop());
     if (autoHistory.length == 0) {
         clearInterval(timerFunction);
@@ -318,18 +368,34 @@ function backupPoint() {
     }
 }
 
+function resetAutoSettings() {
+    for (var [key, value] of autoData) {
+        if (!(value instanceof Object)) continue;
+        const points = value.points;
+        for (var j = points.length - 1; j >= 0; j--) {
+            if (points[j].markForRemoval) {
+                points.splice(j, 1);
+            }
+        }
+    }
+}
+
+function resetAuto() {
+    document.getElementById("initPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "grid";
+    autoPath = [];
+    autoHistory = [];
+    resetAutoSettings();
+    createAuto("starting");
+    state = "auto";
+}
+
 //reads settings.js file, generates HTML for the app using that info
 function generateMainPage(stage){
     document.getElementById("display-match").innerHTML = "Match:  " + matchNum;
     document.getElementById("display-team").innerHTML = "Team: " + teamNum;
     if(stage == "auto"){
-        document.getElementById("initPage").style.display = "none";
-        document.getElementById("mainPage").style.display = "grid";
-        autoPath = [];
-        autoHistory = [];
-        pointHistory = [];
-        createAuto("starting");
-        state = "auto";
+        resetAuto();
     }
     if(stage == "tele"){
         document.getElementById("autoPage").style.display = "none";
