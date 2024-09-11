@@ -3,7 +3,7 @@
 //variable declarations
 let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 150, delay = true, rowContent = [], notesToggled = false, matchInfo = [], allianceColor = "n";
 
-let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
+let timeInt = 100000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
 let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 
 let startAudio = new Audio("sfx/start.wav")
@@ -223,7 +223,7 @@ function createAuto(page) {
         const point = data.points[i];
         if (data.type == "remove" && autoPath.some(otherPoint => otherPoint.label == point.label)) continue;
         const pointBox = document.createElement("button");
-        pointBox.innerHTML = point.label;
+        pointBox.innerHTML = point.display != null ? point.display : point.label;
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
         pointBox.addEventListener("click", ()=> {
@@ -268,7 +268,7 @@ function createAuto(page) {
 }
 
 function geAbsPosition(point) {
-    const offset = getRelPosition(point, isRelative(point), autoPath.length);
+    const offset = getRelPosition(point, point.position, autoPath.length);
     if (point.position.toLowerCase().includes("quasi")) {
         point.x = offset.x;
         point.y = offset.y;
@@ -279,34 +279,38 @@ function geAbsPosition(point) {
     return {x, y};
 }
 
-function getRelPosition(coord, relative, index) {
+function getRelPosition(coord, position, index) {
     let x = coord.x;
     let y = coord.y;
-    if (relative) {
-        const coord = getRelPosition(autoPath[index - 1], isRelative(autoPath[index - 1]), index - 1);
+    if (position.toLowerCase().includes("relative")) {
+        let coord;
+        if (position.toLowerCase().includes("moving")) {
+            coord = getPrevPoint(index);
+        }
+        else {
+            coord = getRelPosition(autoPath[index - 1], autoPath[index - 1].position, index - 1);
+        }
         x += coord.x;
         y += coord.y;
     }
     return {x, y};
 }
 
-function isRelative(point) {
-    return point.position.toLowerCase().includes("relative");
-}
-
 function getPrevPoint(index) {
     for (let i = index - 1; i >= 0; i--) {
         if (autoData.get(autoHistory[i]).isMoving) {
-            let coords = getCoords(autoPath[i], isRelative(autoPath[i]), i);
+            const point = autoPath[i];
+            let coords = getCoords(point, point.position, i);
             return coords[coords.length - 1];
         }
     }
+    alert("U fucked up");
 }
 
 function getCoords(point, index) {
     let coords = "coord" in point ? point.coord : [{x: point.x, y: point.y}];
     for (var c in coords) {
-        coords[c] = getRelPosition(coords[c], isRelative(point), index);
+        coords[c] = getRelPosition(coords[c], point.position, index);
     }
     return coords;
 }
@@ -360,7 +364,8 @@ function drawLine(ctx, prevPoint, point, pixelsPerMeter) {
 
 function backupPoint() {
     if (autoHistory.length == 0) return;
-    autoPath.pop();
+    const point = autoPath.pop();
+    if (point.inverseFunction != null) point.inverseFunction();
     createAuto(autoHistory.pop());
     if (autoHistory.length == 0) {
         clearInterval(timerFunction);

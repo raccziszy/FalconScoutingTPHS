@@ -9,33 +9,33 @@ autoSettingsCopy.set("starting", {
             "label": "Top",
             "x": 1.3,
             "y": 7,
-            "next": "preloadScore",
+            "next": "score",
             "position": "absolute"
         },
         {
             "label": "Middle",
             "x": 1.3,
             "y": 5.55,
-            "next": "preloadScore",
+            "next": "score",
             "position": "absolute"
         },
         {
             "label": "Bottom",
             "x": 1.3,
             "y": 4.1,
-            "next": "preloadScore",
+            "next": "score",
             "position": "absolute"
         },
         {
             "label": "Extreme Bottom",
             "x": 1.3,
             "y": 1.5,
-            "next": "preloadScore",
+            "next": "score",
             "position": "absolute"
         }
     ]
 });
-autoSettingsCopy.set("preloadScore", {
+autoSettingsCopy.set("score", {
     "type": "normal",
     "shouldDrawLine": true,
     "isMoving": false,
@@ -75,21 +75,27 @@ autoSettingsCopy.set("preloadScore", {
             "x": -0.1,
             "y": 0,
             "next": "pickup",
-            "position": "relative",
+            "position": "movingRelative",
             "function": ()=> {
                 autoSettingsCopy.get("pickup").points.push({
-                    "label": "H-Note",
+                    "display": "H-Note",
+                    "label": "H-Note" + UUIDCount,
                     "x": 0,
                     "y": 0,
-                    "next": "intake",
+                    "next": "intakeHoard",
                     "position": "quasiRelative",
-                    "markForRemoval": true
+                    "markForRemoval": true,
                 });
+                UUIDCount++;
+            },
+            "inverseFunction": ()=> {
+                console.log(autoSettingsCopy.get("pickup").points.pop());
+                UUIDCount--;
             }
         }
     ]
 });
-autoSettingsCopy.set("score", {
+autoSettingsCopy.set("scoreHoard", {
     "type": "normal",
     "shouldDrawLine": true,
     "isMoving": false,
@@ -243,4 +249,27 @@ autoSettingsCopy.set("intakeMiddle", {
         }
     ]
 });
+autoSettingsCopy.set("intakeHoard", {
+    "type": "normal",
+    "shouldDrawLine": false,
+    "isMoving": false,
+    "points": [
+        {
+            "label": "Intake",
+            "x": 0,
+            "y": 0.5,
+            "next": "scoreHoard",
+            "position": "relative"
+        },
+        {
+            "label": "Missed",
+            "x": 0,
+            "y": -0.5,
+            "next": "pickup",
+            "position": "relative"
+        }
+    ]
+});
     
+
+var UUIDCount = 0;
