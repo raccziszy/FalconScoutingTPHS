@@ -3,7 +3,7 @@
 //variable declarations
 let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 150, delay = true, rowContent = [], notesToggled = false, matchInfo = [], allianceColor = "n";
 
-let timeInt = 100000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
+let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
 let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 
 let startAudio = new Audio("sfx/start.wav")
@@ -245,13 +245,31 @@ function createAuto(page) {
         pointBox.style.left = left + "px";
         widthOffset += pointBox.offsetWidth;
     }
+    const stateBox = document.createElement("div");
+    stateBox.style.top = field.height + "px";
+    stateBox.style.position = "relative";
+    stateBox.style.display = "flex";
     const back = document.createElement("p");
     back.innerHTML = "BACK";
     back.id = "backButton";
     back.classList.add("autoButton");
-    back.style.top = field.height + "px";
+    // back.style.top = field.height + "px";
     back.addEventListener("click", backupPoint);
-    box.appendChild(back);
+    const continueBtn = document.createElement("p");
+    continueBtn.innerHTML = "CONTINUE";
+    continueBtn.id = "continueButton";
+    continueBtn.classList.add("autoButton");
+    continueBtn.addEventListener("click", ()=> {
+        if (timer != 150) transition(2);
+    })
+
+    stateBox.appendChild(back);
+    stateBox.appendChild(continueBtn);
+    // const continueBtn = document.createElement("p");
+    // continueBtn.innerHTML = "CONTINUE";
+    // continueBtn.id = "continueButton";
+    // continueBtn.classList.add("autoButton");
+    box.appendChild(stateBox);
 
     canvas.width = field.width;
     canvas.height = field.height;
@@ -818,7 +836,7 @@ function updateTimer(){
         }
         if (timer == 135 && !delay) {
             state = "tele"
-            transition(2)
+            // transition(2)
         }
         if(timer == 30){
             //state = "end"

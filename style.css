@@ -545,6 +545,16 @@ body{
   font-size: 1.5em;
   font-family: "Roboto Mono", monospace;
   margin: auto;
+  margin-right: 1%;
+}
+
+#continueButton {
+  width: 10em;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: "Roboto Mono", monospace;
+  margin: auto;
+  margin-left: 1%;
 }
 
 .autoButton {
