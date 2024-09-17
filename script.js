@@ -1,8 +1,9 @@
 // import autoSettings from "./autoSettings.json";
 
 //variable declarations
-let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 150, delay = true, rowContent = [], notesToggled = false, matchInfo = [], allianceColor = "n";
+let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 20, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
 
+let dataPoints = new Map(dataSettings);
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
 let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 
@@ -62,8 +63,6 @@ window.onclick = function(event) {
 document.getElementById("initBtn").addEventListener("click", ()=>{
     transition(0);
 })
-let qataIndex = dataLabels.indexOf("QATA");
-
 
 //localStorage console commands
 function clearStorage() {
@@ -109,8 +108,6 @@ function switchColor() {
 
 //search function for localStorage
 
-
-
 let keys = [];
 for(let i = 0; i < settings.auto.length; i++){
     keys.push(settings.auto[i].trigger);
@@ -145,10 +142,10 @@ window.addEventListener('keydown', function (keystroke) {
             document.getElementById('notes').focus()
             notesToggled = true;
 
-            if (dataValues[qataIndex] == null) {
+            if (dataPoints.QATA == null) {
                 document.getElementById("notes").innerHTML = " ";
             } else {
-                dataValues[qataIndex] = document.getElementById("notes").innerHTML;
+                dataPoints.QATA = document.getElementById("notes").innerHTML;
             }
         }
         else{
@@ -156,7 +153,7 @@ window.addEventListener('keydown', function (keystroke) {
 
             document.getElementById('notesPage').classList.add("notesPageAnimR")
             document.getElementById('notes').classList.add("notesAnimR")
-            dataValues[qataIndex] = document.getElementById("notes").value
+            dataPoints.QATA = document.getElementById("notes").value
             notesToggled = false;
         }
 
@@ -177,19 +174,19 @@ window.addEventListener('keydown', function (keystroke) {
         if(state == "auto"){
             //console.log(set.label)
             if(set && set.trigger == keystroke.key){
-                clickEvt(set.writeType, set.writeLoc);
+                clickEvt(set.writeType, set.label);
             }
             if(set && set.trigger.toUpperCase() == keystroke.key){
-                clickEvt(set.writeType, set.writeLoc, true);
+                clickEvt(set.writeType, set.label, true);
                 console.log("reverse")
             }
         }
         if(state == "tele"){
             if(tes && tes.trigger == keystroke.key){
-                clickEvt(tes.writeType, tes.writeLoc);
+                clickEvt(tes.writeType, tes.label);
             }
             if(tes && tes.trigger.toUpperCase() == keystroke.key){
-                clickEvt(tes.writeType, tes.writeLoc, true);
+                clickEvt(tes.writeType, tes.label, true);
                 console.log("reverse")
             }
         }
@@ -424,14 +421,14 @@ function generateMainPage(stage){
         document.getElementById("autoPage").style.display = "none";
         for(i=0; i<settings.tele.length; i++){
             const box = document.createElement("div")
-            box.innerHTML = settings.tele[i].label;
+            const wLoc = settings.tele[i].label;
+            box.innerHTML = wLoc;
             box.classList.add("mainPageBox");
             box.style.gridColumnStart = settings.tele[i].columnStart;
             box.style.gridColumnEnd = settings.tele[i].columnEnd;
             box.style.gridRowStart = settings.tele[i].rowStart;
             box.style.gridRowEnd = settings.tele[i].rowEnd;
             let wType = settings.tele[i].writeType;
-            let wLoc = settings.tele[i].writeLoc;
             box.id = "box" + wLoc
             box.addEventListener("click", ()=>clickEvt(wType, wLoc))
             document.getElementById("mainPage").appendChild(box);
@@ -447,7 +444,7 @@ function generateMainPage(stage){
             const boxCount = document.createElement("div");
             boxCount.classList.add("mainPageCounter");
             boxCount.id = "label" + wLoc;
-            boxCount.innerHTML = dataValues[wLoc];
+            boxCount.innerHTML = dataPoints.get(wLoc);
             boxCount.style.gridColumn = settings.tele[i].columnStart + "/" + settings.tele[i].columnStart;
             boxCount.style.gridRow = (settings.tele[i].rowEnd-1) + "/" + (settings.tele[i].rowEnd-1);
             boxCount.addEventListener("click", ()=>clickEvt(wType, wLoc))
@@ -461,7 +458,7 @@ function generateMainPage(stage){
 
         //close notes box if it is open
         document.getElementById('notes').blur()
-        dataValues[qataIndex] = document.getElementById("notes").value
+        dataPoints.set("QATA", document.getElementById("notes").value);
         document.getElementById("notes").classList.remove("notesAnim")
         document.getElementById("notes").classList.remove("notesAnimR")
         document.getElementById("notesPage").classList.remove("notesPageAnim")
@@ -513,13 +510,13 @@ function generateMainPage(stage){
                 for(let b=0; b<settings.after[i].cycOptions.length; b++){
                     const option = document.createElement("div");
                     option.classList.add("qataCyc");
-                    option.setAttribute("id", (settings.after[i].writeLoc + "cyc" + settings.after[i].cycOptions[b]))
+                    option.setAttribute("id", (settings.after[i].label + "cyc" + settings.after[i].cycOptions[b]))
                     option.innerHTML = settings.after[i].cycOptions[b]
-                    option.addEventListener("click", ()=> clickEvt("cyc", settings.after[i].writeLoc, settings.after[i].cycOptions[b]))
+                    option.addEventListener("click", ()=> clickEvt("cyc", settings.after[i].label, settings.after[i].cycOptions[b]))
                     bar.appendChild(option);
                 }
                 //set default value
-                dataValues[settings.after[i].writeLoc] = settings.after[i].cycOptions[0];
+                dataPoints.set(settings.after[i].label, settings.after[i].cycOptions[0]);
                 
             }
 
@@ -543,8 +540,8 @@ function generateMainPage(stage){
 
                 const input = document.createElement("input");
                 input.type = "checkbox";
-                input.addEventListener("click", ()=>clickEvt("afterBool", settings.after[i].writeLoc))
-                input.setAttribute("id", ("switch" + settings.after[i].writeLoc))
+                input.addEventListener("click", ()=>clickEvt("afterBool", settings.after[i].label))
+                input.setAttribute("id", ("switch" + settings.after[i].label))
                 labelElem.appendChild(input);
 
                 const span = document.createElement("span");
@@ -570,20 +567,20 @@ function generateMainPage(stage){
                 if(settings.after[i].label == "QATA"){
                     const textbox = document.createElement("textarea");
                     textbox.classList.add("afterTextBox");
-                    textbox.setAttribute("id", ("str" + settings.after[i].writeLoc));
+                    textbox.setAttribute("id", ("str" + settings.after[i].label));
                     textbox.setAttribute("placeholder", settings.after[i].placeholder)
                     textbox.style.height = "14vh";
                     textbox.style.paddingTop = "7px";
                     textbox.style.resize = "none";
-                    console.log("other qata from notes: " + dataValues[qataIndex]);
-                    textbox.innerHTML = dataValues[qataIndex];
+                    console.log("other qata from notes: " + dataPoints.get("QATA"));
+                    textbox.innerHTML = dataPoints.get("QATA");
                     container.appendChild(textbox)
                 }
                 else{
                     const textbox = document.createElement("input");
                     textbox.type = "text";
                     textbox.classList.add("afterTextBox");
-                    textbox.setAttribute("id", ("str" + settings.after[i].writeLoc));
+                    textbox.setAttribute("id", ("str" + settings.after[i].label));
                     textbox.setAttribute("placeholder", settings.after[i].placeholder)
                     container.appendChild(textbox)
                 }
@@ -621,7 +618,7 @@ function generateMainPage(stage){
                 default:
                     break;
             }
-            textbox.setAttribute("id", ("str" + settings.start[i].writeLoc));
+            textbox.setAttribute("id", ("str" + settings.start[i].label));
             textbox.setAttribute("placeholder", settings.start[i].placeholder);
             container.appendChild(textbox)
             startContainer.appendChild(container)
@@ -658,7 +655,7 @@ function generateMainPage(stage){
             startInfoBoxes = document.getElementsByClassName("afterTextBoxStartInfo");
             for (let i = 0; i < startInfoBoxes.length; i++) {
                 for(let j=0; j<settings.start.length; j++){
-                    let id = "str" + settings.start[j].writeLoc;
+                    let id = "str" + settings.start[j].label;
                     if (startInfoBoxes[i].id == id) {
                         switch (settings.start[j].label) {
                             case "Scout ID":
@@ -709,38 +706,38 @@ function generateMainPage(stage){
             if(settings.auto[i].label == "Oof Time" ){
                 continue;
             }
-            rowContent.push(settings.auto[i])
+            rowContent.set(settings.auto[i].label, settings.auto[i]);
         }
         for(i=0; i<settings.tele.length; i++){
-            rowContent.push(settings.tele[i])
+            rowContent.set(settings.tele[i].label, settings.tele[i]);
         }
         
-        console.log(rowContent.length)
+        console.log(rowContent.size)
         
 
-        for(let i=0; i<rowContent.length; i++){
+        for(const value of rowContent.values()){
             var row = document.createElement("tr");
-            row.addEventListener("click", ()=> clickEvt("edit", i))
-            row.setAttribute('id', ("tr" + i))
-            row.setAttribute('class', "editTableRow")
+            row.addEventListener("click", ()=> clickEvt("edit", value.label));
+            row.setAttribute('id', ("tr" + value.label));
+            row.setAttribute('class', "editTableRow");
             
             for(let b=0; b<2; b++){
                 let content;
                 if(b%2 == 0){
-                    content = rowContent[i].label
+                    content = value.label;
                 }
                 if(b%2 == 1){
-                    content = dataValues[rowContent[i].writeLoc]
+                    content = dataPoints.get(value.label);
                 }
                 var cell = document.createElement("td");
                 var cellText = document.createTextNode(content);
                 cell.appendChild(cellText);
                 if (b%2 == 0) {
-                    cell.setAttribute('id', 'qataPageCellID' + i + '')
+                    cell.setAttribute('id', 'qataPageCellID' + value.label + '')
                     cell.setAttribute('class', 'qataPageCellID')
                 }
                 if (b%2 == 1) {
-                    cell.setAttribute('id', 'qataPageCellNumber' + i + '')
+                    cell.setAttribute('id', 'qataPageCellNumber' + value.label + '')
                     cell.setAttribute('class', 'qataPageCellNumber')
                 }
                 row.appendChild(cell);
@@ -818,7 +815,7 @@ function generateMainPage(stage){
 
 //defines time length, starts timer 
 function timerStart(i){
-    timer = 150;
+    timer = 20;
     delay = true;
     updateTimer();
     window.timerFunction = setInterval(updateTimer, timeInt)
@@ -863,42 +860,43 @@ function updateTimer(){
 
 function updateQr(){
     combAllianceColor = allianceColor + teamPos;
-    matchInfo = [matchNum, teamNum, combAllianceColor, scoutNum];
-    for(let i=0; i<dataValues.length; i++){
+    dataPoints.set("Match Info", [matchNum, teamNum, combAllianceColor, scoutNum]);
+    for(const key of dataPoints.keys()){
+        const value = dataPoints.get(key);
         // if(i == 8){ //scrappy code, should change later   
         // }
-        if(typeof dataValues[i] == "boolean"){ //convert boolean to 0 or 1
-            if(dataValues[i]){
-                dataValues[i] = 1;
+        if(typeof value == "boolean"){ //convert boolean to 0 or 1
+            if(value){
+                dataPoints.set(key, 1);
+                continue;
             }
-            else if(!dataValues[i]){
-                dataValues[i] = 0;
-            }
+            dataPoints.set(key, 0);
         }
-        else if(typeof dataValues[i] == "string"){ 
-            console.log("index: " + i);
+        else if(typeof value == "string"){ 
+            console.log("Key: " + key);
 
-            let textValue = document.getElementById(("str" + i)).value;
+            let textValue = document.getElementById(("str" + key)).value;
 
             textValue = textValue.replace(/\n/g, ' ').replace(/\,/g, ';');
             if (textValue.length == 0) {
-                dataValues[i] = "None";
+                dataPoints.set(key, "None");
             } else {
-                dataValues[i] = textValue;
+                dataPoints.set(key, textValue);
             }
         }
         
-    }    //console.log(dataValues)
+    }
 
     //reference for qr gen: https://github.com/kazuhikoarase/qrcode-generator/blob/master/js/README.md
 
     var typeNumber = 0;
     var errorCorrectionLevel = 'L';
     var qr = qrcode(typeNumber, errorCorrectionLevel);
-    qr.addData(matchInfo.concat(dataValues).toString());
+    let stuff = JSON.stringify(dataPoints, (key, value) => (value instanceof Map ? [...value] : value));
+    qr.addData(stuff);
     qr.make();
     document.getElementById('qrContainer').innerHTML = qr.createImgTag();
-    document.getElementById("qrText").innerHTML = matchInfo.concat(dataValues);
+    document.getElementById("qrText").innerHTML = stuff;
 }
 
 let incArr = []
@@ -912,19 +910,19 @@ function clickEvt(type, loc, rev = null){
         document.getElementById("box" + loc).classList.remove("clickAnim");
         void document.getElementById("box" + loc).offsetWidth;
         if(rev){
-            dataValues[loc]--;
+            dataPoints.set(loc, dataPoints.get(loc) - 1);
             document.getElementById("box" + loc).classList.add("clickAnim");
         }
         if(!rev){
-            dataValues[loc]++;
+            dataPoints.set(loc, dataPoints.get(loc) + 1);
             document.getElementById("box" + loc).classList.add("clickAnim");
         }
-        document.getElementById("label" + loc).innerHTML = dataValues[loc];
+        document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
     }
     if(type == "bool"){
-        dataValues[loc] = !dataValues[loc];
-        document.getElementById("label" + loc).innerHTML = dataValues[loc];
-        if (dataValues[loc]) {
+        dataPoints.set(loc, !dataPoints.get(loc));
+        document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
+        if (dataPoints.get(loc)) {
             document.getElementById("box" + loc).style.backgroundColor = "var(--accentColor)"
         } else {
             document.getElementById("box" + loc).style.backgroundColor = "var(--altBgColor)"
@@ -936,13 +934,13 @@ function clickEvt(type, loc, rev = null){
         }
         if(incArr.includes(loc)){
             incArr.splice(incArr.indexOf(loc), 1);
-            document.getElementById("box" + loc).style.backgroundColor = "var(--altBgColor)"
+            document.getElementById("box" + loc).style.backgroundColor = "var(--altBgColor)";
         }
         else{
             incArr.push(loc);
-            document.getElementById("box" + loc).style.backgroundColor = "var(--accentColor)"
+            document.getElementById("box" + loc).style.backgroundColor = "var(--accentColor)";
         }
-        document.getElementById("label" + loc).innerHTML = dataValues[loc];
+        document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
     }
 
     
@@ -950,56 +948,56 @@ function clickEvt(type, loc, rev = null){
     if (type== "cycG") {
         document.getElementById("box" + loc).classList.remove("clickAnim");
         void document.getElementById("box" + loc).offsetWidth;
-        let curVal = dataValues[loc];
+        let curVal = dataPoints.get(loc);
+        let cycOptions;
         for (let sectionName in settings) {
             let section = settings[sectionName];
             for (let i = 0; i < section.length; i++) {
-                if (section[i].writeLoc == loc) {
-                    var cycOptions = section[i].cycGOptions
-                    var cycOptionsLength = section[i].writeCycGOptions                    
+                if (section[i].label == loc) {
+                    cycOptions = section[i].cycGOptions                 
                     break;
                 }
             }
           }
-        let index = cycOptions.indexOf(curVal);
-        index++;
-        if (index == cycOptionsLength) {index = 0;}
-        dataValues[loc] = cycOptions[index];
-        document.getElementById("label" + loc).innerHTML = dataValues[loc];
+        let index = (cycOptions.indexOf(curVal) + 1) % cycOptions.length;
+        dataPoints.set(loc, cycOptions[index]);
+        document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
         document.getElementById("box" + loc).classList.add("clickAnim");
     }
     //after game
     
     if(type == "cyc"){
-        if(dataValues[loc]){
-            dataValues[loc] = rev;
+        if(dataPoints.get(loc)){
+            dataPoints.get(loc) = rev;
             for(let i = 0; i < settings.after[0].cycOptions.length; i++){
                 document.getElementById((loc + "cyc" + settings.after[0].cycOptions[i])).style.border = "2px solid var(--highlightColor)";
             }
             document.getElementById((loc + "cyc" + rev)).style.border = "2px solid var(--accentColor)";
         }
-        if(!dataValues[loc]){
-            dataValues[loc] = rev;
+        if(!dataPoints.get(loc)){
+            dataPoints.set(loc, rev);
             document.getElementById((loc + "cyc" + rev)).style.border = "2px solid var(--accentColor)";
         }
     }
+
     if(type == "afterBool"){
-        dataValues[loc] = !dataValues[loc];
+        dataPoints.set(loc, !dataPoints.get(loc));
     }
+
     if(type == "edit"){
 
-        for(let j=0; j<rowContent.length; j++){
-            document.getElementById(("tr" + j)).classList.remove("editSelect")
+        for(const key of rowContent.keys()) {
+            document.getElementById(("tr" + key)).classList.remove("editSelect");
         }
-        document.getElementById(("tr" + loc)).classList.add("editSelect")
         selected = loc;
-        if(rowContent[selected].writeType == "bool"){
+        document.getElementById(("tr" + loc)).classList.add("editSelect");
+        if(rowContent.get(loc).writeType == "bool") {
             document.getElementById("editTextBox").disabled = true;
         }
-        if(rowContent[selected].writeType != "bool"){
+        if(rowContent.get(loc).writeType != "bool") {
             document.getElementById("editTextBox").disabled = false;
         }
-        document.getElementById("editTextBox").value = dataValues[rowContent[selected].writeLoc]
+        document.getElementById("editTextBox").value = dataPoints.get(loc);
     }
     if(type == "editBtn"){
         if(selected == -1){
@@ -1008,44 +1006,35 @@ function clickEvt(type, loc, rev = null){
         }
 
         if(rev == "value"){
-            dataValues[rowContent[selected].writeLoc] = document.getElementById("editTextBox").value
-            document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataValues[rowContent[selected].writeLoc]
-            dataValues[rowContent[selected].writeLoc]++; //hacky bugfix 2: electric boogaloo (why does this work bro) 
-            dataValues[rowContent[selected].writeLoc]--;
+            const entry = document.getElementById("editTextBox").value;
+            if (!isNaN(entry)) {
+                dataPoints.set(selected, parseInt(entry));
+                document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataPoints.get(selected);
+            }
         }
 
-        if(rowContent[selected].writeType == "bool"){
-            dataValues[rowContent[selected].writeLoc] = !dataValues[rowContent[selected].writeLoc]
+        if(rowContent.get(selected).writeType == "bool"){
+            dataPoints.set(selected, !dataPoints.get(selected));
         }
-        if((rowContent[selected].writeType == "int") || (rowContent[selected].writeType == "inc")){
+
+        if((rowContent.get(selected).writeType == "int") || (rowContent.get(selected).writeType == "inc")){
             if(rev == "plus"){
-                dataValues[rowContent[selected].writeLoc]++;
+                dataPoints.set(selected, dataPoints.get(selected) + 1);
             }
             if(rev == "minus"){
-                dataValues[rowContent[selected].writeLoc]--;
+                dataPoints.set(selected, dataPoints.get(selected) - 1);
             }
         }
-        if(rowContent[selected].writeType == "cycG"){
-            let loc = rowContent[selected].writeLoc
-            let curVal = dataValues[loc];
-            for (let sectionName in settings) {
-                let section = settings[sectionName];
-                for (let i = 0; i < section.length; i++) {
-                    if (section[i].writeLoc == loc) {
-                        var cycOptions = section[i].cycGOptions
-                        var cycOptionsLength = section[i].writeCycGOptions                    
-                        break;
-                    }
-                }
-            }
-            let index = cycOptions.indexOf(curVal);
-            index++;
-            if (index == cycOptionsLength) {index = 0;}
-            dataValues[loc] = cycOptions[index];
+        if(rowContent.get(selected).writeType == "cycG"){
+            let curVal = dataPoints.get(selected);
+            let cycOptions = rowContent.get(selected).cycGOptions;
+            const index = (cycOptions.indexOf(curVal) + 1) % cycOptions.length;
+            dataPoints.set(selected, cycOptions[index]);
+            console.log(dataPoints.get(selected));
         }
 
-        document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataValues[rowContent[selected].writeLoc]
-        document.getElementById("editTextBox").value = dataValues[rowContent[selected].writeLoc]
+        document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataPoints.get(selected);
+        document.getElementById("editTextBox").value = dataPoints.get(selected);
         
     }
 
@@ -1055,13 +1044,13 @@ function clickEvt(type, loc, rev = null){
 
     if(type == "transition"){
         if(confirm("Resetting game... Are you sure you have been scanned and given OK?")){
-            localStorage.setItem(matchNum, matchInfo.concat(dataValues));
-            console.log("Final Data: " + matchInfo.concat(dataValues));
+            localStorage.setItem(matchNum, dataPoints);
+            console.log("Final Data: " + dataPoints);
             resetGame()
         }
     }
 
-    console.log(dataValues);
+    console.log(dataPoints);
 }
 
 //def and climb timers
@@ -1070,8 +1059,8 @@ setInterval( ()=>{
         return;
     }
     for(let i=0; i<incArr.length; i++){
-        dataValues[incArr[i]]++
-        document.getElementById("label" + incArr[i]).innerHTML = dataValues[incArr[i]];
+        dataPoints.set(incArr[i], dataPoints.get(incArr[i]) + 1);
+        document.getElementById("label" + incArr[i]).innerHTML = dataPoints.get(incArr[i]);
     }
 }, 1000)
 
@@ -1112,8 +1101,7 @@ function transition(i){
 
         combAllianceColor = allianceColor + teamPos;
         console.log("alliance color: " + combAllianceColor)
-        //matchInfo = [teamNum, matchNum, scoutNum, combAllianceColor];
-        matchInfo = [matchNum, teamNum, combAllianceColor, scoutNum];
+        dataPoints.set("Match Info", [matchNum, teamNum, combAllianceColor, scoutNum]);
         document.getElementById("infoBar").innerHTML = "Match: " + matchNum + ", Team: " + teamNum + ", Position: " + combAllianceColor
 
         document.getElementById("initFormContainer").classList.add("transitionEvent0");
@@ -1150,21 +1138,16 @@ function transition(i){
 
 function resetGame(){
     state="init";
-    timer = 150;
+    timer = 20;
     delay = true;
-    rowContent = [];
+    rowContent = new Map();
     incArr = [];
-    matchInfo = [];
     selected = -1;
     clearInterval(timerFunction);
     teamNum = null;
     notesToggled = false;
 
-    //dataValues = [false, 0, 0, 0, 0, 0, 0, false, null, 0, 0, false, "", false, "", "", ""]
-    //dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0,0,"","",""];
-    //dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
-    dataValues = [false,0,0,0,0,0,0,0,0,0,0,0,false,0,"","",0,"",0]
-    //dataLabels = [ "Mobility", "Auto High Cube", "Auto Mid Cube", "Auto Low Cube", "Auto High Cone", "Auto Mid Cone", "Auto Low Cone", "Auto Fumbled", "Auto Climb", "High Cube", "Mid Cube", "Low Cube",  "High Cone", "Mid Cone", "Low Cone", "Fumbled", "Climb", "Park","Defense Time", "Penalty Count", "Oof Time", "Climb QATA", "Link QATA", "QATA", "Drivetrain"];
+    dataPoints = {...dataSettings};
 
     //clearing main page and generating the displaybar
     document.getElementById("mainPage").innerHTML = '';
