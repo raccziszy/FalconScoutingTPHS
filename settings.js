@@ -259,7 +259,6 @@ let settings = {
 }
 
 let dataArray = [
-    ["Match Info", []],
     ["leave", false],
     ["Auto amp", 0],
     ["Auto Miss A", 0],
@@ -275,7 +274,6 @@ let dataArray = [
     ["Spotlight", false],
     ["Defense", 0],
     ["Oof Time", 0],
-    ["QATA", ""],
     ["Penalty", 0],
 ];
 

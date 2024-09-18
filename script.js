@@ -1,7 +1,7 @@
 // import autoSettings from "./autoSettings.json";
 
 //variable declarations
-let state = "init", matchNum, scoutNum, teamNum, teamPos, timer = 20, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
+let state = "init", timer = 20, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
 
 let dataPoints = new Map(dataSettings);
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
@@ -10,13 +10,13 @@ let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 let startAudio = new Audio("sfx/start.wav")
 
 //import field image and draw on canvas for starting position
-var img = new Image(); 
+var img = new Image();
 img.src = 'img/field.png';
 var canvas = document.getElementById('fieldCanvas');
 var ctx = canvas.getContext('2d');
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 ctx.drawImage(img, 0, 0);
-document.getElementById("fieldCanvas").addEventListener("click", ()=>{
+document.getElementById("fieldCanvas").addEventListener("click", () => {
     canvasClicked()
 })
 
@@ -24,11 +24,11 @@ document.getElementById("fieldCanvas").addEventListener("click", ()=>{
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
     return {
-      x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
-      y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+        x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+        y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
     };
 }
-function canvasClicked(){
+function canvasClicked() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = img.width;
     canvas.height = img.height;
@@ -53,14 +53,14 @@ var span = document.getElementsByClassName("close")[0];
 // span.onclick = function() {
 //   modal.style.display = "none";
 // }
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
 
 //transitions to 
-document.getElementById("initBtn").addEventListener("click", ()=>{
+document.getElementById("initBtn").addEventListener("click", () => {
     transition(0);
 })
 
@@ -73,7 +73,7 @@ function clearStorage() {
 function getStorage() {
     console.log("GETTING DATA")
     let allData = "";
-    for(var i in localStorage) {
+    for (var i in localStorage) {
         if (typeof localStorage[i] == "string") {
             allData += localStorage[i] + "\n"
         }
@@ -88,7 +88,7 @@ function setColor(col) {
 }
 
 //switches alliance color when TITLE is pressed on the main page
-document.getElementById("initColor").addEventListener("click", ()=>{
+document.getElementById("initColor").addEventListener("click", () => {
     switchColor()
     console.log("color clicked")
 })
@@ -109,10 +109,10 @@ function switchColor() {
 //search function for localStorage
 
 let keys = [];
-for(let i = 0; i < settings.auto.length; i++){
+for (let i = 0; i < settings.auto.length; i++) {
     keys.push(settings.auto[i].trigger);
 }
-for(let i=0; i<settings.tele.length; i++){
+for (let i = 0; i < settings.tele.length; i++) {
     keys.push(settings.tele[i].trigger);
 }
 let uniqueKeys = keys.filter((i, index) => {
@@ -120,14 +120,14 @@ let uniqueKeys = keys.filter((i, index) => {
 });
 
 //updates QR code on qata page every second
-let qrRefresh = setInterval(()=>{ if(state == "after") updateQr() }, 1000);
+// let qrRefresh = setInterval(() => { if (state == "after") updateQr() }, 1000);
 
 
 //code for hotkeys, notes
 window.addEventListener('keydown', function (keystroke) {
-    if(keystroke.key == "Alt"){
+    if (keystroke.key == "Alt") {
         keystroke.preventDefault();
-        if(state == "init" || state == "after"){
+        if (state == "init" || state == "after") {
             return;
         }
         console.log("toggled")
@@ -136,7 +136,7 @@ window.addEventListener('keydown', function (keystroke) {
         document.getElementById("notesPage").classList.remove("notesPageAnim")
         document.getElementById("notesPage").classList.remove("notesPageAnimR")
 
-        if(!notesToggled){
+        if (!notesToggled) {
             document.getElementById('notesPage').classList.add("notesPageAnim")
             document.getElementById('notes').classList.add("notesAnim")
             document.getElementById('notes').focus()
@@ -148,7 +148,7 @@ window.addEventListener('keydown', function (keystroke) {
                 dataPoints.QATA = document.getElementById("notes").innerHTML;
             }
         }
-        else{
+        else {
             document.getElementById('notes').blur()
 
             document.getElementById('notesPage').classList.add("notesPageAnimR")
@@ -158,34 +158,34 @@ window.addEventListener('keydown', function (keystroke) {
         }
 
     }
-    if(notesToggled){
+    if (notesToggled) {
         return;
     }
     console.log(keystroke.key)
-    if(state == "after"){
-       updateQr();
-    }
-    if(keystroke.key == " " && state == "standby"){
+    // if (state == "after") {
+    //     updateQr();
+    // }
+    if (keystroke.key == " " && state == "standby") {
         transition(1)
     }
-    for(let i=0; i < uniqueKeys.length; i++){
+    for (let i = 0; i < uniqueKeys.length; i++) {
         var set = settings.auto[i];
         var tes = settings.tele[i];
-        if(state == "auto"){
+        if (state == "auto") {
             //console.log(set.label)
-            if(set && set.trigger == keystroke.key){
+            if (set && set.trigger == keystroke.key) {
                 clickEvt(set.writeType, set.label);
             }
-            if(set && set.trigger.toUpperCase() == keystroke.key){
+            if (set && set.trigger.toUpperCase() == keystroke.key) {
                 clickEvt(set.writeType, set.label, true);
                 console.log("reverse")
             }
         }
-        if(state == "tele"){
-            if(tes && tes.trigger == keystroke.key){
+        if (state == "tele") {
+            if (tes && tes.trigger == keystroke.key) {
                 clickEvt(tes.writeType, tes.label);
             }
-            if(tes && tes.trigger.toUpperCase() == keystroke.key){
+            if (tes && tes.trigger.toUpperCase() == keystroke.key) {
                 clickEvt(tes.writeType, tes.label, true);
                 console.log("reverse")
             }
@@ -204,7 +204,7 @@ var autoHistory = [];
 // const autoData = new Map(JSON.parse(JSON.stringify(autoSettings)));
 
 function createAuto(page) {
-    const autoPage = document.getElementById("autoPage");   
+    const autoPage = document.getElementById("autoPage");
     autoPage.innerHTML = "";
     autoPage.style.display = "flex";
     const box = document.createElement("div");
@@ -223,7 +223,7 @@ function createAuto(page) {
         pointBox.innerHTML = point.display != null ? point.display : point.label;
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
-        pointBox.addEventListener("click", ()=> {
+        pointBox.addEventListener("click", () => {
             if (data.type == "start") {
                 timerStart()
                 startAudio.play();
@@ -256,7 +256,7 @@ function createAuto(page) {
     continueBtn.innerHTML = "CONTINUE";
     continueBtn.id = "continueButton";
     continueBtn.classList.add("autoButton");
-    continueBtn.addEventListener("click", ()=> {
+    continueBtn.addEventListener("click", () => {
         if (timer != 150) transition(2);
     })
 
@@ -291,7 +291,7 @@ function geAbsPosition(point) {
     }
     let x = (allianceColor == "r" ? fieldLength - offset.x : offset.x);
     let y = offset.y;
-    return {x, y};
+    return { x, y };
 }
 
 function getRelPosition(coord, position, index) {
@@ -308,7 +308,7 @@ function getRelPosition(coord, position, index) {
         x += coord.x;
         y += coord.y;
     }
-    return {x, y};
+    return { x, y };
 }
 
 function getPrevPoint(index) {
@@ -323,7 +323,7 @@ function getPrevPoint(index) {
 }
 
 function getCoords(point, index) {
-    let coords = "coord" in point ? point.coord : [{x: point.x, y: point.y}];
+    let coords = "coord" in point ? point.coord : [{ x: point.x, y: point.y }];
     for (var c in coords) {
         coords[c] = getRelPosition(coords[c], point.position, index);
     }
@@ -358,7 +358,7 @@ function drawPath(canvas, pixelsPerMeter) {
 function drawLine(ctx, prevPoint, point, pixelsPerMeter) {
     const x = (allianceColor == "r" ? fieldLength - point.x : point.x) * pixelsPerMeter;
     const y = field.height - point.y * pixelsPerMeter
-    const xStart = (allianceColor == "r" ? fieldLength - prevPoint.x: prevPoint.x) * pixelsPerMeter;
+    const xStart = (allianceColor == "r" ? fieldLength - prevPoint.x : prevPoint.x) * pixelsPerMeter;
     const yStart = field.height - prevPoint.y * pixelsPerMeter;
     const angle = Math.atan2(y - yStart, x - xStart);
     const headLen = 10;
@@ -411,15 +411,15 @@ function resetAuto() {
 }
 
 //reads settings.js file, generates HTML for the app using that info
-function generateMainPage(stage){
-    document.getElementById("display-match").innerHTML = "Match:  " + matchNum;
-    document.getElementById("display-team").innerHTML = "Team: " + teamNum;
-    if(stage == "auto"){
+function generateMainPage(stage) {
+    document.getElementById("display-match").innerHTML = "Match:  " + dataPoints.get("Match Number");
+    document.getElementById("display-team").innerHTML = "Team: " + dataPoints.get("Team Number");
+    if (stage == "auto") {
         resetAuto();
     }
-    if(stage == "tele"){
+    if (stage == "tele") {
         document.getElementById("autoPage").style.display = "none";
-        for(i=0; i<settings.tele.length; i++){
+        for (i = 0; i < settings.tele.length; i++) {
             const box = document.createElement("div")
             const wLoc = settings.tele[i].label;
             box.innerHTML = wLoc;
@@ -430,15 +430,15 @@ function generateMainPage(stage){
             box.style.gridRowEnd = settings.tele[i].rowEnd;
             let wType = settings.tele[i].writeType;
             box.id = "box" + wLoc
-            box.addEventListener("click", ()=>clickEvt(wType, wLoc))
+            box.addEventListener("click", () => clickEvt(wType, wLoc))
             document.getElementById("mainPage").appendChild(box);
 
             const boxLabel = document.createElement("div");
             boxLabel.classList.add("mainPageLabel");
-            boxLabel.style.gridColumn = (settings.tele[i].columnEnd-1) + "/" + (settings.tele[i].columnEnd-1);
-            boxLabel.style.gridRow = (settings.tele[i].rowEnd-1) + "/" + (settings.tele[i].rowEnd-1);
+            boxLabel.style.gridColumn = (settings.tele[i].columnEnd - 1) + "/" + (settings.tele[i].columnEnd - 1);
+            boxLabel.style.gridRow = (settings.tele[i].rowEnd - 1) + "/" + (settings.tele[i].rowEnd - 1);
             boxLabel.innerHTML = settings.tele[i].trigger.toUpperCase()
-            boxLabel.addEventListener("click", ()=>clickEvt(wType, wLoc))
+            boxLabel.addEventListener("click", () => clickEvt(wType, wLoc))
             document.getElementById("mainPage").appendChild(boxLabel);
 
             const boxCount = document.createElement("div");
@@ -446,14 +446,14 @@ function generateMainPage(stage){
             boxCount.id = "label" + wLoc;
             boxCount.innerHTML = dataPoints.get(wLoc);
             boxCount.style.gridColumn = settings.tele[i].columnStart + "/" + settings.tele[i].columnStart;
-            boxCount.style.gridRow = (settings.tele[i].rowEnd-1) + "/" + (settings.tele[i].rowEnd-1);
-            boxCount.addEventListener("click", ()=>clickEvt(wType, wLoc))
+            boxCount.style.gridRow = (settings.tele[i].rowEnd - 1) + "/" + (settings.tele[i].rowEnd - 1);
+            boxCount.addEventListener("click", () => clickEvt(wType, wLoc))
             document.getElementById("mainPage").appendChild(boxCount);
         }
         console.log("tele generated");
         state = "tele"
     }
-    if(stage == "after"){
+    if (stage == "after") {
         document.getElementById("displayBar").style.display = "none"
 
         //close notes box if it is open
@@ -492,8 +492,8 @@ function generateMainPage(stage){
         strInputs.appendChild(qataBox);
 
 
-        for(let i=0; i<settings.after.length; i++){
-            if(settings.after[i].writeType == "cyc"){
+        for (let i = 0; i < settings.after.length; i++) {
+            if (settings.after[i].writeType == "cyc") {
                 const container = document.createElement("div");
                 container.classList.add("cycContainer");
                 qataBox.appendChild(container);
@@ -507,22 +507,22 @@ function generateMainPage(stage){
                 bar.classList.add("qataCycContainer");
                 container.appendChild(bar);
 
-                for(let b=0; b<settings.after[i].cycOptions.length; b++){
+                for (let b = 0; b < settings.after[i].cycOptions.length; b++) {
                     const option = document.createElement("div");
                     option.classList.add("qataCyc");
                     option.setAttribute("id", (settings.after[i].label + "cyc" + settings.after[i].cycOptions[b]))
                     option.innerHTML = settings.after[i].cycOptions[b]
-                    option.addEventListener("click", ()=> clickEvt("cyc", settings.after[i].label, settings.after[i].cycOptions[b]))
+                    option.addEventListener("click", () => clickEvt("cyc", settings.after[i].label, settings.after[i].cycOptions[b]))
                     bar.appendChild(option);
                 }
                 //set default value
                 dataPoints.set(settings.after[i].label, settings.after[i].cycOptions[0]);
-                
+
             }
 
-          
-            
-            if(settings.after[i].writeType == "bool"){
+
+
+            if (settings.after[i].writeType == "bool") {
                 const container = document.createElement("div");
                 container.classList.add("switchContainer");
                 qataBox.appendChild(container);
@@ -535,12 +535,12 @@ function generateMainPage(stage){
                 const labelElem = document.createElement("label");
                 labelElem.classList.add("switch")
 
-                
+
                 container.appendChild(labelElem)
 
                 const input = document.createElement("input");
                 input.type = "checkbox";
-                input.addEventListener("click", ()=>clickEvt("afterBool", settings.after[i].label))
+                input.addEventListener("click", () => clickEvt("afterBool", settings.after[i].label))
                 input.setAttribute("id", ("switch" + settings.after[i].label))
                 labelElem.appendChild(input);
 
@@ -548,12 +548,14 @@ function generateMainPage(stage){
                 span.classList.add("slider");
                 span.classList.add("round");
                 labelElem.appendChild(span);
+
+                dataPoints.set(settings.after[i].label, false)
             }
-            if(settings.after[i].writeType == "str"){
-                
+            if (settings.after[i].writeType == "str") {
+
                 const container = document.createElement("div");
                 container.classList.add("textContainer");
-                if(settings.after[i].label == "Other Qata"){
+                if (settings.after[i].label == "Other Qata") {
                     container.style.height = "20vh"
                 }
                 qataBox.appendChild(container);
@@ -564,35 +566,44 @@ function generateMainPage(stage){
                 container.appendChild(labelText);
 
 
-                if(settings.after[i].label == "QATA"){
+                if (settings.after[i].label == "QATA") {
                     const textbox = document.createElement("textarea");
                     textbox.classList.add("afterTextBox");
                     textbox.setAttribute("id", ("str" + settings.after[i].label));
-                    textbox.setAttribute("placeholder", settings.after[i].placeholder)
+                    textbox.setAttribute("placeholder", settings.after[i].placeholder);
                     textbox.style.height = "14vh";
                     textbox.style.paddingTop = "7px";
                     textbox.style.resize = "none";
                     console.log("other qata from notes: " + dataPoints.get("QATA"));
                     textbox.innerHTML = dataPoints.get("QATA");
+                    textbox.addEventListener("input", () => {
+                        dataPoints.set("QATA", textbox.value);
+                        updateQr();
+                    })
                     container.appendChild(textbox)
                 }
-                else{
+                else {
                     const textbox = document.createElement("input");
                     textbox.type = "text";
                     textbox.classList.add("afterTextBox");
                     textbox.setAttribute("id", ("str" + settings.after[i].label));
                     textbox.setAttribute("placeholder", settings.after[i].placeholder)
+                    textbox.addEventListener("input", () => {
+                        dataPoints.set(settings.after[i].label, textbox.value);
+                        updateQr();
+                    })
                     container.appendChild(textbox)
+                    dataPoints.set(settings.after[i].label, "");
                 }
             }
-            
+
         }
 
         // Start Info Text Boxes
         const startContainer = document.createElement("div");
         strInputs.appendChild(startContainer);
         startContainer.classList.add("afterPageStartContainer");
-        for(let i=0; i<settings.start.length; i++){
+        for (let i = 0; i < settings.start.length; i++) {
             const container = document.createElement("div");
             container.classList.add("afterPageStartItem");
             const labelText = document.createElement("div");
@@ -602,24 +613,13 @@ function generateMainPage(stage){
             const textbox = document.createElement("input");
             textbox.type = "text";
             textbox.classList.add("afterTextBoxStartInfo");
-            switch (settings.start[i].label) {
-                case "Scout ID":
-                    textbox.value = scoutNum;
-                    break;
-                case "Team Number":
-                    textbox.value = teamNum;
-                    break;
-                case "Match Number":
-                    textbox.value = matchNum;
-                    break;
-                case "Team Position":
-                    textbox.value = teamPos;
-                    break;
-                default:
-                    break;
-            }
+            textbox.value = dataPoints.get(settings.start[i].label);
             textbox.setAttribute("id", ("str" + settings.start[i].label));
             textbox.setAttribute("placeholder", settings.start[i].placeholder);
+            textbox.addEventListener("input", ()=> {
+                dataPoints.set(settings.start[i].label, textbox.value);
+                updateQr();
+            })
             container.appendChild(textbox)
             startContainer.appendChild(container)
         }
@@ -643,7 +643,7 @@ function generateMainPage(stage){
             let radioLabel = document.createElement("label");
             radioLabel.classList.add("afterPageStartLabel");
             radioLabel.innerHTML = color;
-            radioLabel.setAttribute("for","afterPageStart" + color);
+            radioLabel.setAttribute("for", "afterPageStart" + color);
             radioDiv.appendChild(radio);
             radioDiv.appendChild(radioLabel);
             startContainer.appendChild(radioDiv)
@@ -654,26 +654,10 @@ function generateMainPage(stage){
         startInfoButton.addEventListener("click", () => {
             startInfoBoxes = document.getElementsByClassName("afterTextBoxStartInfo");
             for (let i = 0; i < startInfoBoxes.length; i++) {
-                for(let j=0; j<settings.start.length; j++){
+                for (let j = 0; j < settings.start.length; j++) {
                     let id = "str" + settings.start[j].label;
                     if (startInfoBoxes[i].id == id) {
-                        switch (settings.start[j].label) {
-                            case "Scout ID":
-                                scoutNum = startInfoBoxes[i].value;
-                                console.log(scoutNum)
-                                break;
-                            case "Team Number":
-                                teamNum = startInfoBoxes[i].value;
-                                break;
-                            case "Match Number":
-                                matchNum = startInfoBoxes[i].value;
-                                break;
-                            case "Team Position":
-                                teamPos = startInfoBoxes[i].value;
-                                break;
-                            default:
-                                break;
-                        }
+                        dataPoints.set(settings.start[j].label, startInfoBoxes[i].value);
                     }
                 }
             }
@@ -700,43 +684,43 @@ function generateMainPage(stage){
         editBox.appendChild(editTable);
         mainPage.appendChild(editBox);
 
-        
-        
-        for(i=0; i<settings.auto.length; i++){
-            if(settings.auto[i].label == "Oof Time" ){
+
+
+        for (i = 0; i < settings.auto.length; i++) {
+            if (settings.auto[i].label == "Oof Time") {
                 continue;
             }
             rowContent.set(settings.auto[i].label, settings.auto[i]);
         }
-        for(i=0; i<settings.tele.length; i++){
+        for (i = 0; i < settings.tele.length; i++) {
             rowContent.set(settings.tele[i].label, settings.tele[i]);
         }
-        
-        console.log(rowContent.size)
-        
 
-        for(const value of rowContent.values()){
+        console.log(rowContent.size)
+
+
+        for (const value of rowContent.values()) {
             var row = document.createElement("tr");
-            row.addEventListener("click", ()=> clickEvt("edit", value.label));
+            row.addEventListener("click", () => clickEvt("edit", value.label));
             row.setAttribute('id', ("tr" + value.label));
             row.setAttribute('class', "editTableRow");
-            
-            for(let b=0; b<2; b++){
+
+            for (let b = 0; b < 2; b++) {
                 let content;
-                if(b%2 == 0){
+                if (b % 2 == 0) {
                     content = value.label;
                 }
-                if(b%2 == 1){
+                if (b % 2 == 1) {
                     content = dataPoints.get(value.label);
                 }
                 var cell = document.createElement("td");
                 var cellText = document.createTextNode(content);
                 cell.appendChild(cellText);
-                if (b%2 == 0) {
+                if (b % 2 == 0) {
                     cell.setAttribute('id', 'qataPageCellID' + value.label + '')
                     cell.setAttribute('class', 'qataPageCellID')
                 }
-                if (b%2 == 1) {
+                if (b % 2 == 1) {
                     cell.setAttribute('id', 'qataPageCellNumber' + value.label + '')
                     cell.setAttribute('class', 'qataPageCellNumber')
                 }
@@ -754,7 +738,7 @@ function generateMainPage(stage){
         hCell.innerText = "item";
         hCell.classList.add("qataPageCellID")
         let hCell2 = hRow.insertCell(1);
-        hCell2.innerText = "value"; 
+        hCell2.innerText = "value";
         hCell2.classList.add("qataPageCellNumber")
 
         //buttons that user selects while editing
@@ -767,13 +751,13 @@ function generateMainPage(stage){
         btn.setAttribute("class", "editBtn");
         btn.innerHTML = "-"
         editor.appendChild(btn);
-        document.getElementById("editMinusBtn").addEventListener("click", ()=> clickEvt("editBtn", null, "minus"));
+        document.getElementById("editMinusBtn").addEventListener("click", () => clickEvt("editBtn", null, "minus"));
 
         const textbox = document.createElement("input");
         textbox.type = "text";
         textbox.setAttribute("id", "editTextBox");
         textbox.disabled = true;
-        textbox.addEventListener("change", ()=> clickEvt("editBtn", null, "value"))
+        textbox.addEventListener("change", () => clickEvt("editBtn", null, "value"))
         editor.appendChild(textbox)
 
         let btn2 = document.createElement("button");
@@ -781,7 +765,7 @@ function generateMainPage(stage){
         btn2.setAttribute("class", "editBtn");
         btn2.innerHTML = "+"
         editor.appendChild(btn2);
-        document.getElementById("editPlusBtn").addEventListener("click", ()=> clickEvt("editBtn", null, "plus")); 
+        document.getElementById("editPlusBtn").addEventListener("click", () => clickEvt("editBtn", null, "plus"));
 
 
 
@@ -796,7 +780,7 @@ function generateMainPage(stage){
 
         let qrText = document.createElement("div");
         qrText.setAttribute("id", "qrText");
-        qrText.addEventListener("click", ()=>{
+        qrText.addEventListener("click", () => {
             navigator.clipboard.writeText(document.getElementById("qrText").innerHTML);
             alert("String copied to clipboard")
         })
@@ -805,7 +789,7 @@ function generateMainPage(stage){
         let qrBtn = document.createElement("button");
         qrBtn.setAttribute("id", "qrBtn");
         qrBtn.innerHTML = "continue";
-        qrBtn.addEventListener("click", ()=>clickEvt("transition", null, null))
+        qrBtn.addEventListener("click", () => clickEvt("transition", null, null))
         qrBox.appendChild(qrBtn);
 
         updateQr()
@@ -814,19 +798,19 @@ function generateMainPage(stage){
 }
 
 //defines time length, starts timer 
-function timerStart(i){
+function timerStart(i) {
     timer = 20;
     delay = true;
     updateTimer();
     window.timerFunction = setInterval(updateTimer, timeInt)
     console.log("timer started")
 }
-function updateTimer(){
+function updateTimer() {
     document.getElementById("display-timer").innerHTML = timer;
-    if(settings.imported.transitionMode == "manual"){
+    if (settings.imported.transitionMode == "manual") {
         timer--;
     }
-    if(settings.imported.transitionMode == "auto"){
+    if (settings.imported.transitionMode == "auto") {
         if (timer == 135 && delay) { //janky implementation of 2 second auto to teleop delay
             timer = 136; //136??? check delay
             delay = !delay
@@ -835,44 +819,43 @@ function updateTimer(){
             state = "tele"
             // transition(2)
         }
-        if(timer == 30){
+        if (timer == 30) {
             //state = "end"
             //transition(3)
             //this was removed because the endgame page was the same as the teleop page
         }
-        if(timer == 0) {
+        if (timer == 0) {
             console.log("Game over");
             timer -= 1;
             state = "after";
             transition(4)
         }
         if (timer > 0) {
-            timer --;
+            timer--;
         }
     }
-    if(timer == 0) {
+    if (timer == 0) {
         console.log("Game over");
         timer -= 1;
         state = "after";
         transition(4)
-    } 
+    }
 }
 
-function updateQr(){
-    combAllianceColor = allianceColor + teamPos;
-    dataPoints.set("Match Info", [matchNum, teamNum, combAllianceColor, scoutNum]);
-    for(const key of dataPoints.keys()){
+function updateQr() {
+    combAllianceColor = allianceColor + dataPoints.get("Team Position");
+    for (const key of dataPoints.keys()) {
         const value = dataPoints.get(key);
         // if(i == 8){ //scrappy code, should change later   
         // }
-        if(typeof value == "boolean"){ //convert boolean to 0 or 1
-            if(value){
+        if (typeof value == "boolean") { //convert boolean to 0 or 1
+            if (value) {
                 dataPoints.set(key, 1);
                 continue;
             }
             dataPoints.set(key, 0);
         }
-        else if(typeof value == "string"){ 
+        else if (typeof value == "string") {
             console.log("Key: " + key);
 
             let textValue = document.getElementById(("str" + key)).value;
@@ -884,7 +867,7 @@ function updateQr(){
                 dataPoints.set(key, textValue);
             }
         }
-        
+
     }
 
     //reference for qr gen: https://github.com/kazuhikoarase/qrcode-generator/blob/master/js/README.md
@@ -901,25 +884,25 @@ function updateQr(){
 
 let incArr = []
 let selected = -1;
-function clickEvt(type, loc, rev = null){
+function clickEvt(type, loc, rev = null) {
     console.log(type + " " + loc);
     let clickAudio = new Audio("sfx/click.wav")
     clickAudio.play();
     //during game
-    if(type == "int"){
+    if (type == "int") {
         document.getElementById("box" + loc).classList.remove("clickAnim");
         void document.getElementById("box" + loc).offsetWidth;
-        if(rev){
+        if (rev) {
             dataPoints.set(loc, dataPoints.get(loc) - 1);
             document.getElementById("box" + loc).classList.add("clickAnim");
         }
-        if(!rev){
+        if (!rev) {
             dataPoints.set(loc, dataPoints.get(loc) + 1);
             document.getElementById("box" + loc).classList.add("clickAnim");
         }
         document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
     }
-    if(type == "bool"){
+    if (type == "bool") {
         dataPoints.set(loc, !dataPoints.get(loc));
         document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
         if (dataPoints.get(loc)) {
@@ -928,24 +911,24 @@ function clickEvt(type, loc, rev = null){
             document.getElementById("box" + loc).style.backgroundColor = "var(--altBgColor)"
         }
     }
-    if(type == "inc"){
-        if(rev){
+    if (type == "inc") {
+        if (rev) {
             return;
         }
-        if(incArr.includes(loc)){
+        if (incArr.includes(loc)) {
             incArr.splice(incArr.indexOf(loc), 1);
             document.getElementById("box" + loc).style.backgroundColor = "var(--altBgColor)";
         }
-        else{
+        else {
             incArr.push(loc);
             document.getElementById("box" + loc).style.backgroundColor = "var(--accentColor)";
         }
         document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
     }
 
-    
-    
-    if (type== "cycG") {
+
+
+    if (type == "cycG") {
         document.getElementById("box" + loc).classList.remove("clickAnim");
         void document.getElementById("box" + loc).offsetWidth;
         let curVal = dataPoints.get(loc);
@@ -954,58 +937,58 @@ function clickEvt(type, loc, rev = null){
             let section = settings[sectionName];
             for (let i = 0; i < section.length; i++) {
                 if (section[i].label == loc) {
-                    cycOptions = section[i].cycGOptions                 
+                    cycOptions = section[i].cycGOptions
                     break;
                 }
             }
-          }
+        }
         let index = (cycOptions.indexOf(curVal) + 1) % cycOptions.length;
         dataPoints.set(loc, cycOptions[index]);
         document.getElementById("label" + loc).innerHTML = dataPoints.get(loc);
         document.getElementById("box" + loc).classList.add("clickAnim");
     }
     //after game
-    
-    if(type == "cyc"){
-        if(dataPoints.get(loc)){
+
+    if (type == "cyc") {
+        if (dataPoints.get(loc)) {
             dataPoints.get(loc) = rev;
-            for(let i = 0; i < settings.after[0].cycOptions.length; i++){
+            for (let i = 0; i < settings.after[0].cycOptions.length; i++) {
                 document.getElementById((loc + "cyc" + settings.after[0].cycOptions[i])).style.border = "2px solid var(--highlightColor)";
             }
             document.getElementById((loc + "cyc" + rev)).style.border = "2px solid var(--accentColor)";
         }
-        if(!dataPoints.get(loc)){
+        if (!dataPoints.get(loc)) {
             dataPoints.set(loc, rev);
             document.getElementById((loc + "cyc" + rev)).style.border = "2px solid var(--accentColor)";
         }
     }
 
-    if(type == "afterBool"){
+    if (type == "afterBool") {
         dataPoints.set(loc, !dataPoints.get(loc));
     }
 
-    if(type == "edit"){
+    if (type == "edit") {
 
-        for(const key of rowContent.keys()) {
+        for (const key of rowContent.keys()) {
             document.getElementById(("tr" + key)).classList.remove("editSelect");
         }
         selected = loc;
         document.getElementById(("tr" + loc)).classList.add("editSelect");
-        if(rowContent.get(loc).writeType == "bool") {
+        if (rowContent.get(loc).writeType == "bool") {
             document.getElementById("editTextBox").disabled = true;
         }
-        if(rowContent.get(loc).writeType != "bool") {
+        if (rowContent.get(loc).writeType != "bool") {
             document.getElementById("editTextBox").disabled = false;
         }
         document.getElementById("editTextBox").value = dataPoints.get(loc);
     }
-    if(type == "editBtn"){
-        if(selected == -1){
+    if (type == "editBtn") {
+        if (selected == -1) {
             alert("nothing selected")
             return;
         }
 
-        if(rev == "value"){
+        if (rev == "value") {
             const entry = document.getElementById("editTextBox").value;
             if (!isNaN(entry)) {
                 dataPoints.set(selected, parseInt(entry));
@@ -1013,19 +996,19 @@ function clickEvt(type, loc, rev = null){
             }
         }
 
-        if(rowContent.get(selected).writeType == "bool"){
+        if (rowContent.get(selected).writeType == "bool") {
             dataPoints.set(selected, !dataPoints.get(selected));
         }
 
-        if((rowContent.get(selected).writeType == "int") || (rowContent.get(selected).writeType == "inc")){
-            if(rev == "plus"){
+        if ((rowContent.get(selected).writeType == "int") || (rowContent.get(selected).writeType == "inc")) {
+            if (rev == "plus") {
                 dataPoints.set(selected, dataPoints.get(selected) + 1);
             }
-            if(rev == "minus"){
+            if (rev == "minus") {
                 dataPoints.set(selected, dataPoints.get(selected) - 1);
             }
         }
-        if(rowContent.get(selected).writeType == "cycG"){
+        if (rowContent.get(selected).writeType == "cycG") {
             let curVal = dataPoints.get(selected);
             let cycOptions = rowContent.get(selected).cycGOptions;
             const index = (cycOptions.indexOf(curVal) + 1) % cycOptions.length;
@@ -1035,16 +1018,16 @@ function clickEvt(type, loc, rev = null){
 
         document.getElementById(("qataPageCellNumber" + selected)).innerHTML = dataPoints.get(selected);
         document.getElementById("editTextBox").value = dataPoints.get(selected);
-        
+
     }
 
-    if(state == "after"){
+    if (state == "after") {
         updateQr();
     }
 
-    if(type == "transition"){
-        if(confirm("Resetting game... Are you sure you have been scanned and given OK?")){
-            localStorage.setItem(matchNum, dataPoints);
+    if (type == "transition") {
+        if (confirm("Resetting game... Are you sure you have been scanned and given OK?")) {
+            localStorage.setItem(dataPoints.get("Match Num"), dataPoints);
             console.log("Final Data: " + dataPoints);
             resetGame()
         }
@@ -1054,63 +1037,68 @@ function clickEvt(type, loc, rev = null){
 }
 
 //def and climb timers
-setInterval( ()=>{
-    if((state == "after") || (state=="init")){
+setInterval(() => {
+    if ((state == "after") || (state == "init")) {
         return;
     }
-    for(let i=0; i<incArr.length; i++){
+    for (let i = 0; i < incArr.length; i++) {
         dataPoints.set(incArr[i], dataPoints.get(incArr[i]) + 1);
         document.getElementById("label" + incArr[i]).innerHTML = dataPoints.get(incArr[i]);
     }
 }, 1000)
 
-function transition(i){
-    if(i==0 && state == "init"){
-        scoutNum = document.getElementById("initIdForm").value;
-        matchNum = document.getElementById("initMatchForm").value;
-        teamNum = document.getElementById("initNumberForm").value;
-        teamPos = document.getElementById("initPositionForm").value;
+function transition(i) {
+    if (i == 0 && state == "init") {
+
+        const scoutNum = document.getElementById("initIdForm").value;
+        const matchNum = document.getElementById("initMatchForm").value;
+        const teamNum = document.getElementById("initNumberForm").value;
+        const teamPos = document.getElementById("initPositionForm").value;
+
+        dataPoints.set("Scout ID", scoutNum);
+        dataPoints.set("Team Number", matchNum);
+        dataPoints.set("Match Number", teamNum);
+        dataPoints.set("Team Position", teamPos);
 
         if (!testing) {
             if (!(allianceColor == 'b' || allianceColor == 'r')) { //check alliance color
                 if (!confirm("Did you enter the alliance color by clicking eScouting?")) {
-                return;
+                    return;
                 }
             }
             if (scoutNum == "") { //check scout name
                 if (!confirm("Did you enter your name in scout id?")) {
-                return;
+                    return;
                 }
             }
             if (!(/^\d+$/.test(teamNum))) { //check if team number is a number
                 if (!confirm("Did you enter your team number correctly?")) {
-                return;
+                    return;
                 }
             }
             if (!(/^\d+$/.test(matchNum))) { //check if match number is a number
                 if (!confirm("Did you enter the match number correctly?")) {
-                return;
+                    return;
                 }
             }
             if (!(teamPos == 1 || teamPos == 2 || teamPos == 3)) { //check if team position is 1, 2, or 3
                 if (!confirm("Did you enter your team position correctly?")) {
-                return;
+                    return;
                 }
             }
         }
 
         combAllianceColor = allianceColor + teamPos;
-        console.log("alliance color: " + combAllianceColor)
-        dataPoints.set("Match Info", [matchNum, teamNum, combAllianceColor, scoutNum]);
+        console.log("alliance color: " + combAllianceColor);
         document.getElementById("infoBar").innerHTML = "Match: " + matchNum + ", Team: " + teamNum + ", Position: " + combAllianceColor
 
         document.getElementById("initFormContainer").classList.add("transitionEvent0");
-        setTimeout(()=>{
+        setTimeout(() => {
             document.getElementById("initFormContainer").classList.add("hideClass");
         }, 100)
         document.getElementById("initDivLine").classList.add("transitionEvent1");
         document.getElementById("standbyContainer").classList.add("transitionEvent0Rev");
-        setTimeout(()=>{
+        setTimeout(() => {
             document.getElementById("standbyContainer").style.display = "flex";
             //canvasClicked()
         }, 1000)
@@ -1118,36 +1106,33 @@ function transition(i){
         return;
 
     }
-    if(i==1 && state == "standby"){
+    if (i == 1 && state == "standby") {
         generateMainPage("auto")
     }
-    if(i==2){
+    if (i == 2) {
         generateMainPage("tele")
     }
-    if(i == 4  && state == "after"){
-        let removeElem = (settings.tele.length)*3        
-        for(let i=0; i<removeElem; i++){
-            
+    if (i == 4 && state == "after") {
+        let removeElem = (settings.tele.length) * 3
+        for (let i = 0; i < removeElem; i++) {
+
             mainPageElem = document.getElementById("mainPage");
             mainPageElem.removeChild(mainPageElem.lastElementChild)
         }
         generateMainPage("after");
-        
+
     }
 }
 
-function resetGame(){
-    state="init";
+function resetGame() {
+    state = "init";
     timer = 20;
     delay = true;
     rowContent = new Map();
     incArr = [];
     selected = -1;
     clearInterval(timerFunction);
-    teamNum = null;
     notesToggled = false;
-
-    dataPoints = {...dataSettings};
 
     //clearing main page and generating the displaybar
     document.getElementById("mainPage").innerHTML = '';
@@ -1159,18 +1144,20 @@ function resetGame(){
     document.getElementById("infoBar").innerHTML = '';
 
     //resetting initial page values
-    document.getElementById("initIdForm").value = scoutNum;
+    document.getElementById("initIdForm").value = dataPoints.get("Scout ID");
     document.getElementById("initNumberForm").value = '';
-    document.getElementById("initMatchForm").value = parseInt(matchNum) + 1;
-    document.getElementById("initPositionForm").value = teamPos;
+    document.getElementById("initMatchForm").value = parseInt(dataPoints.get("Match Number")) + 1;
+    document.getElementById("initPositionForm").value = dataPoints.get("Team Position");
     document.getElementById("initColor").style = "background-color: var(--" + allianceColor + ")";
     document.getElementById("qrDisplay").innerHTML = "";
     document.getElementById("searchForm").value = '';
     document.getElementById("notes").value = '';
 
+    dataPoints = new Map(dataSettings);
+
     //close out of note box
     document.getElementById('notes').blur()
-    
+
     let displayMatch = document.createElement("div");
     displayMatch.setAttribute("id", "display-match");
     displayBar.appendChild(displayMatch);
@@ -1201,25 +1188,25 @@ function resetGame(){
 //custom keybinds
 //custom colour themes
 //custom sounds but its already implemented :shrug:
-document.getElementById("exitSettingsButton").addEventListener("click", ()=>{
+document.getElementById("exitSettingsButton").addEventListener("click", () => {
     document.getElementById("initPage").style.display = "flex";
     document.getElementById("settingsPage").style.display = "none";
 })
 
-document.getElementById("settingsBtn").addEventListener("click", ()=>{
+document.getElementById("settingsBtn").addEventListener("click", () => {
     document.getElementById("settingsPage").style.display = "flex";
     document.getElementById("initPage").style.display = "none";
 })
 
 
 let appearanceBtn = document.getElementsByClassName("appearanceBtnElem");
-for(let i=0; i<appearanceBtn.length; i++){
-    appearanceBtn[i].addEventListener("click", ()=>{
+for (let i = 0; i < appearanceBtn.length; i++) {
+    appearanceBtn[i].addEventListener("click", () => {
         changeColor(appearanceBtn[i].getAttribute("id"));
     })
 }
 
-function changeColor(id){
+function changeColor(id) {
     var r = document.querySelector(':root')
     r.style.setProperty('--mainColor', themes[id][0]);
     r.style.setProperty('--subColor', themes[id][1]);
@@ -1236,7 +1223,7 @@ function abortMatch() {
         // The user clicked "OK", so proceed with the action
         console.log("User confirmed, proceeding...");
         let tempNum = document.getElementById("initNumberForm").value;
-        matchNum -= 1;
+        dataPoints.set("Match Number", dataPoints.get("Match Number") - 1);
         resetGame();
         document.getElementById("initNumberForm").value = tempNum;
         notesToggled = false;
@@ -1246,32 +1233,32 @@ function abortMatch() {
     }
 }
 
-document.getElementById("customStyleBtn").addEventListener("click", ()=>{
+document.getElementById("customStyleBtn").addEventListener("click", () => {
     let arr = document.getElementsByClassName("appearanceForm");
-    for(let i=0; i<arr.length; i++){
+    for (let i = 0; i < arr.length; i++) {
         var input = arr[i].value;
         var regex = /[0-9A-Fa-f]{6}/g;
-        if (input.match(regex) ){
+        if (input.match(regex)) {
             document.querySelector(":root").style.setProperty(("--" + arr[i].getAttribute("id")), "#" + arr[i].value)
-        }else{
+        } else {
             alert(arr[i].getAttribute("id") + " is not a valid hex color");
         }
-        
+
     }
 })
 
-document.getElementById("searchBtn").addEventListener("click", ()=>{
+document.getElementById("searchBtn").addEventListener("click", () => {
     document.getElementById("searchPage").style.display = "flex";
     document.getElementById("initPage").style.display = "none";
 })
 
-document.getElementById("searchReturn").addEventListener("click", ()=>{
+document.getElementById("searchReturn").addEventListener("click", () => {
     document.getElementById("searchPage").style.display = "none";
     document.getElementById("initPage").style.display = "flex";
 })
 
-document.getElementById("searchConfirm").addEventListener("click", ()=>{
-    searchTerm = document.getElementById("searchForm").value        
+document.getElementById("searchConfirm").addEventListener("click", () => {
+    searchTerm = document.getElementById("searchForm").value
     value = localStorage.getItem(searchTerm)
     if (value == null || searchTerm == null || searchTerm == '') {
         document.getElementById('qrDisplay').innerHTML = "";
