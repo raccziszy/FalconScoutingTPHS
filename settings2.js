@@ -89,7 +89,6 @@ autoSettingsCopy.set("score", {
                 UUIDCount++;
             },
             "inverseFunction": ()=> {
-                console.log(autoSettingsCopy.get("pickup").points.pop());
                 UUIDCount--;
             }
         }
@@ -269,7 +268,34 @@ autoSettingsCopy.set("intakeHoard", {
             "position": "relative"
         }
     ]
-});
-    
+});   
 
 var UUIDCount = 0;
+
+function convertAutoPathToData(dataMap, autoPath) {
+    for (let i = 0; i < autoPath.length; i++) {
+        const point = autoPath[i];
+        if (point.label == "Speaker Score") {
+            dataMap.set("Auto Speaker", dataMap.get("Auto Speaker") + 1);
+        }
+        if (point.label == "Speaker Miss") {
+            dataMap.set("Auto Miss S", dataMap.get("Auto Miss S") + 1);
+        }
+        if (point.label == "Amp Score") {
+            dataMap.set("Auto Amp", dataMap.get("Auto Amp") + 1);
+        }
+        if (point.label == "Amp Miss") {
+            dataMap.set("Auto Miss A", dataMap.get("Auto Miss A") + 1);
+        }
+        if (point.label.includes("note")) dataMap.set("Leave", true);
+
+        if (point.label.includes("note2")) {
+            if (i == autoPath.length - 1) return;
+            const nextPoint = autoPath[i + 1];
+            if (nextPoint.label == "Intake") {
+                dataMap.set("Midline Notes", dataMap.get("Midline Notes") + 1);
+            }
+        }
+    }
+    dataPoints.set("Auto Path", autoPath);
+}

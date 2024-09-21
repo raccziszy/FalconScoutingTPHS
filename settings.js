@@ -5,13 +5,12 @@ let settings = {
     "auto": [
         //cube cone buttons
         {
-            "label": "Auto amp",
+            "label": "Auto Amp",
             "trigger": "e",
             "columnStart": 1,
             "columnEnd": 3,
             "rowStart": 1,
             "rowEnd": 3,
-            "writeLoc": 1,
             "writeType": "int"
         },
         {
@@ -20,9 +19,17 @@ let settings = {
             "columnStart": 4,
             "columnEnd": 5,
             "rowStart": 3,
-            "rowEnd": 5,
-            "writeLoc": 16,
+            "rowEnd": 4,
             "writeType": "inc"
+        },
+        {
+            "label": "Midline Notes",
+            "trigger": "m",
+            "columnStart": 4,
+            "columnEnd": 5,
+            "rowStart": 4,
+            "rowEnd": 5,
+            "writeType": "int"
         },
         {
             "label": "Auto Miss S",
@@ -31,7 +38,6 @@ let settings = {
             "columnEnd": 2,
             "rowStart": 3,
             "rowEnd": 5,
-            "writeLoc": 4,
             "writeType": "int"
         },
         {
@@ -41,7 +47,6 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 3,
             "rowEnd": 5,
-            "writeLoc": 2,
             "writeType": "int"
         },
         {
@@ -51,7 +56,6 @@ let settings = {
             "columnEnd": 5,
             "rowStart": 1,
             "rowEnd": 3,
-            "writeLoc": 3,
             "writeType": "int"
         },
         //cube cone buttons end
@@ -63,27 +67,9 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 3,
             "rowEnd": 5,
-            "writeLoc": 0,
             "writeType": "bool"
         }
-
-        // ,
-        // {
-        //   "label": "Defense",
-        //   "trigger": "a", 
-        //   "columnStart": 1,
-        //   "columnEnd": 3,
-        //   "rowStart": 4,
-        //   "rowEnd": 5,
-        //   "writeLoc": 18,
-        //   "writeType": "inc"
-        // }
     ],
-
-
-
-
-
     "tele": [
         //cube cone buttons
         {
@@ -93,7 +79,6 @@ let settings = {
             "columnEnd": 2,
             "rowStart": 1,
             "rowEnd": 3,
-            "writeLoc": 6,
             "writeType": "int"
         },
         {
@@ -103,7 +88,6 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 1,
             "rowEnd": 3,
-            "writeLoc": 8,
             "writeType": "int"
         },
         {
@@ -113,7 +97,6 @@ let settings = {
             "columnEnd": 2,
             "rowStart": 3,
             "rowEnd": 4,
-            "writeLoc": 7,
             "writeType": "int"
         },
         {
@@ -123,7 +106,6 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 3,
             "rowEnd": 4,
-            "writeLoc": 5,
             "writeType": "int"
         },
         {
@@ -133,7 +115,6 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 1,
             "rowEnd": 2,
-            "writeLoc": 10,
             "writeType": "int"
         },
         //scoring buttons end
@@ -144,7 +125,6 @@ let settings = {
             "columnEnd": 5,
             "rowStart": 2,
             "rowEnd": 3,
-            "writeLoc": 18,
             "writeType": "int"
         },
         {
@@ -154,7 +134,6 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 4,
             "rowEnd": 5,
-            "writeLoc": 9,
             "writeType": "int"
         },
         {
@@ -164,7 +143,6 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 4,
             "rowEnd": 5,
-            "writeLoc": 12,
             "writeType": "bool"
         },
         {
@@ -174,7 +152,6 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 3,
             "rowEnd": 4,
-            "writeLoc": 11,
             "writeType": "cycG",
             "cycGOptions": [0, 1, 3],
             "writeCycGOptions": 3
@@ -186,7 +163,6 @@ let settings = {
             "columnEnd": 5,
             "rowStart": 3,
             "rowEnd": 5,
-            "writeLoc": 16,
             "writeType": "inc"
         },
         {
@@ -196,35 +172,24 @@ let settings = {
             "columnEnd": 5,
             "rowStart": 1,
             "rowEnd": 2,
-            "writeLoc": 13,
             "writeType": "inc"
         }
     ],
 
     "after": [
-        // {
-        //   "label":"Climbed?",
-        //   "writeLoc": 16,
-        //   "writeType": "cyc",
-        //   "cycOptions": [0, 6, 10],
-        //   "writeCycOptions": 3
-        // },
 
         {
             "label": "Climbing Capabilities?",
-            "writeLoc": 14,
             "writeType": "str",
             "placeholder": "e.g. harmonized? speed? good trap+climb?"
         },
         {
             "label": "Defense Description",
-            "writeLoc": 15,
             "writeType": "str",
             "placeholder": "how did they play defense? push power? speed?"
         },
         {
             "label": "QATA",
-            "writeLoc": 17,
             "writeType": "str",
             "placeholder": "e.g. how are they scoring? speed? skill?"
         }
@@ -232,25 +197,21 @@ let settings = {
     "start": [
         {
             "label": "Scout ID",
-            "writeLoc": 20,
             "writeType": "strBegin",
             "placeholder": "your team # + your name"
         },
         {
             "label": "Team Number",
-            "writeLoc": 21,
             "writeType": "strBegin",
             "placeholder": "# of the team you are scouting"
         },
         {
             "label": "Match Number",
-            "writeLoc": 19,
             "writeType": "strBegin",
             "placeholder": "current match #"
         },
         {
             "label": "Team Position",
-            "writeLoc": 22,
             "writeType": "strBegin",
             "placeholder": "1, 2, or 3"
         }
@@ -258,29 +219,45 @@ let settings = {
 
 }
 
-let dataArray = [
-    ["leave", false],
-    ["Auto amp", 0],
-    ["Auto Miss A", 0],
-    ["Auto Speaker", 0],
-    ["Auto Miss S", 0],
-    ["Tele Miss S", 0],
-    ["Tele Amp", 0],
-    ["Tele Miss A", 0],
-    ["Tele Speaker", 0],
-    ["Forced Misses", 0],
-    ["Trap Note", 0],
-    ["Climb Level", 0],
-    ["Spotlight", false],
-    ["Defense", 0],
-    ["Oof Time", 0],
-    ["Penalty", 0],
-];
+let dataSettings = new Map();
 
-let dataSettings = new Map(dataArray);
+function getDataSettings() {
+    if (dataSettings.size == 0) {
+        dataSettings = new Map(getDataArray());
+    }
+    console.log(dataSettings);
+    return dataSettings;
+}
 
 
-let themes = {
+function getDataArray() {
+    const dataArray = [];
+    for (const data of [settings.auto, settings.tele])
+        for (let i = 0; i < data.length; i++) {
+            const point = data[i];
+            let value = 0;
+            switch(point.writeType) {
+                case "str":
+                    value = "";
+                    break;
+                case "bool":
+                    value = false;
+                    break;
+                case "cycG":
+                    value = point.cycGOptions[0];
+                    break;
+                default:
+                    value = 0;
+                    break;
+            }
+
+            dataArray.push([point.label, value]);
+        }
+        return dataArray;
+}
+
+
+const themes = {
     "mainStyleSheet": ["#000", "#999999", "#fff", "#f3f3f3", "#E54C38", "invert(0%) sepia(100%) saturate(7430%) hue-rotate(46deg) brightness(81%) contrast(114% opacity(50%))"],
     // main, second, bg, highlight, 
     "styleCarbon": ["#eee", "#444", "#111", "#191919", "#da3333", "invert(100%) sepia(0%) saturate(6935%) hue-rotate(270deg) brightness(111%) contrast(87%) opacity(50%)"],

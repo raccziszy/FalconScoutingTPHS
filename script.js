@@ -3,7 +3,7 @@
 //variable declarations
 let state = "init", timer = 20, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
 
-let dataPoints = new Map(dataSettings);
+let dataPoints = new Map();
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
 let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
 
@@ -242,6 +242,7 @@ function createAuto(page) {
         pointBox.style.left = left + "px";
         widthOffset += pointBox.offsetWidth;
     }
+
     const stateBox = document.createElement("div");
     stateBox.style.top = field.height + "px";
     stateBox.style.position = "relative";
@@ -250,22 +251,21 @@ function createAuto(page) {
     back.innerHTML = "BACK";
     back.id = "backButton";
     back.classList.add("autoButton");
-    // back.style.top = field.height + "px";
     back.addEventListener("click", backupPoint);
-    const continueBtn = document.createElement("p");
-    continueBtn.innerHTML = "CONTINUE";
-    continueBtn.id = "continueButton";
-    continueBtn.classList.add("autoButton");
-    continueBtn.addEventListener("click", () => {
-        if (timer != 150) transition(2);
-    })
-
     stateBox.appendChild(back);
-    stateBox.appendChild(continueBtn);
-    // const continueBtn = document.createElement("p");
-    // continueBtn.innerHTML = "CONTINUE";
-    // continueBtn.id = "continueButton";
-    // continueBtn.classList.add("autoButton");
+
+    if (autoHistory.length > 0) {
+        const continueBtn = document.createElement("p");
+        continueBtn.innerHTML = "CONTINUE";
+        continueBtn.id = "continueButton";
+        continueBtn.classList.add("autoButton");
+        continueBtn.addEventListener("click", () => {
+            if (timer != 150) transition(2);
+        })
+        back.style.marginRight = "1%";
+        stateBox.appendChild(continueBtn);
+    }
+
     box.appendChild(stateBox);
 
     canvas.width = field.width;
@@ -274,12 +274,6 @@ function createAuto(page) {
     canvas.style.zIndex = 1;
 
     drawPath(canvas, pixelsPerMeter);
-
-    //To do:
-    /**
-     * Add continue button - no
-     * Log data?
-     */
 }
 
 function geAbsPosition(point) {
@@ -618,7 +612,7 @@ function generateMainPage(stage) {
             textbox.setAttribute("placeholder", settings.start[i].placeholder);
             textbox.addEventListener("input", ()=> {
                 dataPoints.set(settings.start[i].label, textbox.value);
-                updateQr();
+                updateQr()
             })
             container.appendChild(textbox)
             startContainer.appendChild(container)
@@ -640,6 +634,10 @@ function generateMainPage(stage) {
                 if (allianceColor == "b") radio.checked = true
             }
             radio.id = "afterPageStart" + color;
+            radio.addEventListener("click", ()=> {
+                allianceColor = i % 2 == 0 ? "r" : "b";
+                updateQr();
+            });
             let radioLabel = document.createElement("label");
             radioLabel.classList.add("afterPageStartLabel");
             radioLabel.innerHTML = color;
@@ -648,28 +646,6 @@ function generateMainPage(stage) {
             radioDiv.appendChild(radioLabel);
             startContainer.appendChild(radioDiv)
         }
-        const startInfoButton = document.createElement("button");
-        startInfoButton.id = "startInfoButton";
-        startInfoButton.innerHTML = "Set Match Data";
-        startInfoButton.addEventListener("click", () => {
-            startInfoBoxes = document.getElementsByClassName("afterTextBoxStartInfo");
-            for (let i = 0; i < startInfoBoxes.length; i++) {
-                for (let j = 0; j < settings.start.length; j++) {
-                    let id = "str" + settings.start[j].label;
-                    if (startInfoBoxes[i].id == id) {
-                        dataPoints.set(settings.start[j].label, startInfoBoxes[i].value);
-                    }
-                }
-            }
-            let colorRadio = document.getElementsByName("afterPageStartColors");
-            for (let i = 0; i < colorRadio.length; i++) {
-                if (colorRadio[i].checked) {
-                    allianceColor = colorRadio[i].value;
-                }
-            }
-            updateQr();
-        })
-        startContainer.appendChild(startInfoButton);
 
         let editBox = document.createElement('div');
         editBox.classList.add("afterPageEdit");
@@ -844,6 +820,7 @@ function updateTimer() {
 
 function updateQr() {
     combAllianceColor = allianceColor + dataPoints.get("Team Position");
+    dataPoints.set("Alliance Color", allianceColor);
     for (const key of dataPoints.keys()) {
         const value = dataPoints.get(key);
         // if(i == 8){ //scrappy code, should change later   
@@ -858,9 +835,9 @@ function updateQr() {
         else if (typeof value == "string") {
             console.log("Key: " + key);
 
-            let textValue = document.getElementById(("str" + key)).value;
+            let textValue = value;
 
-            textValue = textValue.replace(/\n/g, ' ').replace(/\,/g, ';');
+            textValue = textValue.replace(/\n/g, ' ');
             if (textValue.length == 0) {
                 dataPoints.set(key, "None");
             } else {
@@ -1049,16 +1026,11 @@ setInterval(() => {
 
 function transition(i) {
     if (i == 0 && state == "init") {
-
+        dataPoints = new Map(getDataSettings());
         const scoutNum = document.getElementById("initIdForm").value;
         const matchNum = document.getElementById("initMatchForm").value;
         const teamNum = document.getElementById("initNumberForm").value;
         const teamPos = document.getElementById("initPositionForm").value;
-
-        dataPoints.set("Scout ID", scoutNum);
-        dataPoints.set("Team Number", matchNum);
-        dataPoints.set("Match Number", teamNum);
-        dataPoints.set("Team Position", teamPos);
 
         if (!testing) {
             if (!(allianceColor == 'b' || allianceColor == 'r')) { //check alliance color
@@ -1088,6 +1060,12 @@ function transition(i) {
             }
         }
 
+        dataPoints.set("Scout ID", scoutNum);
+        dataPoints.set("Team Number", matchNum);
+        dataPoints.set("Match Number", teamNum);
+        dataPoints.set("Team Position", teamPos);
+        dataPoints.set("Alliance Color", allianceColor);
+
         combAllianceColor = allianceColor + teamPos;
         console.log("alliance color: " + combAllianceColor);
         document.getElementById("infoBar").innerHTML = "Match: " + matchNum + ", Team: " + teamNum + ", Position: " + combAllianceColor
@@ -1110,6 +1088,7 @@ function transition(i) {
         generateMainPage("auto")
     }
     if (i == 2) {
+        convertAutoPathToData(dataPoints, autoPath);
         generateMainPage("tele")
     }
     if (i == 4 && state == "after") {
@@ -1153,7 +1132,7 @@ function resetGame() {
     document.getElementById("searchForm").value = '';
     document.getElementById("notes").value = '';
 
-    dataPoints = new Map(dataSettings);
+    // dataPoints = new Map(getDataSettings());
 
     //close out of note box
     document.getElementById('notes').blur()
