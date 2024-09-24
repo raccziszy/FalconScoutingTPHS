@@ -84,6 +84,10 @@ body{
     flex-direction: column;
 }
 
+#initTeamForm {
+    height:8vh;
+}
+
 .initForm{
     width: calc(30vw - 1rem);
     margin: auto;
@@ -117,6 +121,7 @@ body{
     font-family: "Roboto Mono", monospace;
     color: var(--accentColor);
 
+    /*! margin: auto; */
 }
 
 #autoPage {

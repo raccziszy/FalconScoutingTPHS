@@ -1,7 +1,7 @@
 // import autoSettings from "./autoSettings.json";
 
 //variable declarations
-let state = "init", timer = 20, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
+let state = "init", timer = 135, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
 
 let dataPoints = new Map();
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
@@ -775,7 +775,7 @@ function generateMainPage(stage) {
 
 //defines time length, starts timer 
 function timerStart(i) {
-    timer = 20;
+    timer = 135;
     delay = true;
     updateTimer();
     window.timerFunction = setInterval(updateTimer, timeInt)
@@ -1027,10 +1027,11 @@ setInterval(() => {
 function transition(i) {
     if (i == 0 && state == "init") {
         dataPoints = new Map(getDataSettings());
-        const scoutNum = document.getElementById("initIdForm").value;
+        const scoutID = document.getElementById("initIdForm").value;
         const matchNum = document.getElementById("initMatchForm").value;
         const teamNum = document.getElementById("initNumberForm").value;
         const teamPos = document.getElementById("initPositionForm").value;
+        const scoutTeam = document.getElementById("initTeamForm").value;
 
         if (!testing) {
             if (!(allianceColor == 'b' || allianceColor == 'r')) { //check alliance color
@@ -1038,7 +1039,7 @@ function transition(i) {
                     return;
                 }
             }
-            if (scoutNum == "") { //check scout name
+            if (scoutID == "") { //check scout name
                 if (!confirm("Did you enter your name in scout id?")) {
                     return;
                 }
@@ -1060,10 +1061,11 @@ function transition(i) {
             }
         }
 
-        dataPoints.set("Scout ID", scoutNum);
-        dataPoints.set("Team Number", matchNum);
-        dataPoints.set("Match Number", teamNum);
+        dataPoints.set("Scout ID", scoutID);
+        dataPoints.set("Team Number", teamNum);
+        dataPoints.set("Match Number", matchNum);
         dataPoints.set("Team Position", teamPos);
+        dataPoints.set("Scout Team", parseInt(scoutTeam));
         dataPoints.set("Alliance Color", allianceColor);
 
         combAllianceColor = allianceColor + teamPos;
@@ -1105,7 +1107,7 @@ function transition(i) {
 
 function resetGame() {
     state = "init";
-    timer = 20;
+    timer = 135;
     delay = true;
     rowContent = new Map();
     incArr = [];

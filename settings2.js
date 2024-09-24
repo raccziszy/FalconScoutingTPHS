@@ -275,21 +275,22 @@ var UUIDCount = 0;
 function convertAutoPathToData(dataMap, autoPath) {
     for (let i = 0; i < autoPath.length; i++) {
         const point = autoPath[i];
-        if (point.label == "Speaker Score") {
+        const label = point.label.toLowerCase();
+        if (label == "Speaker Score".toLowerCase()) {
             dataMap.set("Auto Speaker", dataMap.get("Auto Speaker") + 1);
         }
-        if (point.label == "Speaker Miss") {
+        if (label == "Speaker Miss".toLowerCase()) {
             dataMap.set("Auto Miss S", dataMap.get("Auto Miss S") + 1);
         }
-        if (point.label == "Amp Score") {
+        if (label == "Amp Score".toLowerCase()) {
             dataMap.set("Auto Amp", dataMap.get("Auto Amp") + 1);
         }
-        if (point.label == "Amp Miss") {
+        if (label == "Amp Miss".toLowerCase()) {
             dataMap.set("Auto Miss A", dataMap.get("Auto Miss A") + 1);
         }
-        if (point.label.includes("note")) dataMap.set("Leave", true);
+        if (label.includes("note") || label.includes("leave")) dataMap.set("Leave", true);
 
-        if (point.label.includes("note2")) {
+        if (label.includes("note2")) {
             if (i == autoPath.length - 1) return;
             const nextPoint = autoPath[i + 1];
             if (nextPoint.label == "Intake") {

@@ -79,6 +79,7 @@ let settings = {
             "columnEnd": 2,
             "rowStart": 1,
             "rowEnd": 3,
+            "writeLoc": 5,
             "writeType": "int"
         },
         {
@@ -88,6 +89,7 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 1,
             "rowEnd": 3,
+            "writeLoc": 7,
             "writeType": "int"
         },
         {
@@ -97,6 +99,7 @@ let settings = {
             "columnEnd": 2,
             "rowStart": 3,
             "rowEnd": 4,
+            "writeLoc": 6,
             "writeType": "int"
         },
         {
@@ -106,15 +109,17 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 3,
             "rowEnd": 4,
+            "writeLoc": 8,
             "writeType": "int"
         },
         {
-            "label": "Trap Note",
+            "label": "Trap note",
             "trigger": "u",
             "columnStart": 3,
             "columnEnd": 4,
             "rowStart": 1,
             "rowEnd": 2,
+            "writeLoc": 10,
             "writeType": "int"
         },
         //scoring buttons end
@@ -125,6 +130,7 @@ let settings = {
             "columnEnd": 5,
             "rowStart": 2,
             "rowEnd": 3,
+            "writeLoc": 16,
             "writeType": "int"
         },
         {
@@ -134,6 +140,7 @@ let settings = {
             "columnEnd": 3,
             "rowStart": 4,
             "rowEnd": 5,
+            "writeLoc": 14,
             "writeType": "int"
         },
         {
@@ -143,6 +150,7 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 4,
             "rowEnd": 5,
+            "writeLoc": 11,
             "writeType": "bool"
         },
         {
@@ -152,26 +160,39 @@ let settings = {
             "columnEnd": 4,
             "rowStart": 3,
             "rowEnd": 4,
+            "writeLoc": 12,
             "writeType": "cycG",
             "cycGOptions": [0, 1, 3],
             "writeCycGOptions": 3
+        },
+        {
+            "label": "Fed Note",
+            "trigger": "p",
+            "columnStart": 4,
+            "columnEnd": 5,
+            "rowStart": 3,
+            "rowEnd": 4,
+            "writeLoc": 9,
+            "writeType": "int"
         },
         {
             "label": "Oof Time",
             "trigger": "l",
             "columnStart": 4,
             "columnEnd": 5,
-            "rowStart": 3,
+            "rowStart": 4,
             "rowEnd": 5,
+            "writeLoc": 15,
             "writeType": "inc"
         },
         {
-            "label": "Defense",
+            "label": "Defence",
             "trigger": "i",
             "columnStart": 4,
             "columnEnd": 5,
             "rowStart": 1,
             "rowEnd": 2,
+            "writeLoc": 13,
             "writeType": "inc"
         }
     ],
@@ -236,7 +257,7 @@ function getDataArray() {
         for (let i = 0; i < data.length; i++) {
             const point = data[i];
             let value = 0;
-            switch(point.writeType) {
+            switch (point.writeType) {
                 case "str":
                     value = "";
                     break;
@@ -253,7 +274,7 @@ function getDataArray() {
 
             dataArray.push([point.label, value]);
         }
-        return dataArray;
+    return dataArray;
 }
 
 
