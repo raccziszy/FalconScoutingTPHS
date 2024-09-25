@@ -273,9 +273,12 @@ autoSettingsCopy.set("intakeHoard", {
 var UUIDCount = 0;
 
 function convertAutoPathToData(dataMap, autoPath) {
+    const history = [];
     for (let i = 0; i < autoPath.length; i++) {
         const point = autoPath[i];
         const label = point.label.toLowerCase();
+        history.push(point.label);
+        
         if (label == "Speaker Score".toLowerCase()) {
             dataMap.set("Auto Speaker", dataMap.get("Auto Speaker") + 1);
         }
@@ -291,12 +294,12 @@ function convertAutoPathToData(dataMap, autoPath) {
         if (label.includes("note") || label.includes("leave")) dataMap.set("Leave", true);
 
         if (label.includes("note2")) {
-            if (i == autoPath.length - 1) return;
+            if (i == autoPath.length - 1) continue;
             const nextPoint = autoPath[i + 1];
             if (nextPoint.label == "Intake") {
                 dataMap.set("Midline Notes", dataMap.get("Midline Notes") + 1);
             }
         }
     }
-    dataPoints.set("Auto Path", autoPath);
+    dataPoints.set("Auto Path", history);
 }

@@ -200,12 +200,12 @@ let settings = {
     "after": [
 
         {
-            "label": "Climbing Capabilities?",
+            "label": "Climbing QATA",
             "writeType": "str",
             "placeholder": "e.g. harmonized? speed? good trap+climb?"
         },
         {
-            "label": "Defense Description",
+            "label": "Defense QATA",
             "writeType": "str",
             "placeholder": "how did they play defense? push power? speed?"
         },

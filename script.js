@@ -5,7 +5,7 @@ let state = "init", timer = 135, delay = true, rowContent = new Map(), notesTogg
 
 let dataPoints = new Map();
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
-let testing = true; // DISABLES INTRO PAGE CHECKS IF TRUE
+let testing = false; // DISABLES INTRO PAGE CHECKS IF TRUE
 
 let startAudio = new Audio("sfx/start.wav")
 
@@ -611,7 +611,7 @@ function generateMainPage(stage) {
             textbox.setAttribute("id", ("str" + settings.start[i].label));
             textbox.setAttribute("placeholder", settings.start[i].placeholder);
             textbox.addEventListener("input", ()=> {
-                dataPoints.set(settings.start[i].label, textbox.value);
+                dataPoints.set(settings.start[i].label, !isNaN(textbox.value) ? parseInt(textbox.value) : textbox.value);
                 updateQr()
             })
             container.appendChild(textbox)
@@ -825,14 +825,14 @@ function updateQr() {
         const value = dataPoints.get(key);
         // if(i == 8){ //scrappy code, should change later   
         // }
-        if (typeof value == "boolean") { //convert boolean to 0 or 1
-            if (value) {
-                dataPoints.set(key, 1);
-                continue;
-            }
-            dataPoints.set(key, 0);
-        }
-        else if (typeof value == "string") {
+        // if (typeof value == "boolean") { //convert boolean to 0 or 1
+        //     if (value) {
+        //         dataPoints.set(key, 1);
+        //         continue;
+        //     }
+        //     dataPoints.set(key, 0);
+        // }
+        if (typeof value == "string") {
             console.log("Key: " + key);
 
             let textValue = value;
@@ -1061,10 +1061,10 @@ function transition(i) {
             }
         }
 
-        dataPoints.set("Scout ID", scoutID);
-        dataPoints.set("Team Number", teamNum);
-        dataPoints.set("Match Number", matchNum);
-        dataPoints.set("Team Position", teamPos);
+        dataPoints.set("Scout ID", isNaN(scoutID) ? scoutID : parseInt(scoutID));
+        dataPoints.set("Team Number", isNaN(teamNum) ? teamNum : parseInt(teamNum));
+        dataPoints.set("Match Number", isNaN(matchNum) ? matchNum : parseInt(matchNum));
+        dataPoints.set("Team Position", isNaN(teamPos) ? teamPos : parseInt(teamPos));
         dataPoints.set("Scout Team", parseInt(scoutTeam));
         dataPoints.set("Alliance Color", allianceColor);
 
