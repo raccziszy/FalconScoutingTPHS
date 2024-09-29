@@ -59,7 +59,9 @@
                 </div>
             </div>
             <div id="standbyContainer">
-                <div id="infoBar"></div>
+                <div>
+                    <div id="infoBar"></div>
+                </div>
                 <canvas id="fieldCanvas"></canvas>
                 <div id="standbyLabel">
                     press <span class="hl-span">space</span> to continue
@@ -130,9 +132,14 @@
 
     <div id="mainPage" class="viewpage mainPage">
         <div id="displayBar">
-            <div id="display-match"></div>
+            <div class = "flex">
+                <div id="display-match"></div>
+                <div id="display-team"></div>
+            </div>
             <div id="display-timer"></div>
-            <div id="display-team"></div>
+            <div class = "flex">
+                <button id = "continue" class = "autoButton">Continue</button>
+            </div>
         </div>
         <div id="reset" onclick="abortMatch()">Abort</div>
     </div>

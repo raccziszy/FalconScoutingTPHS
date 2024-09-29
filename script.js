@@ -1,7 +1,7 @@
 // import autoSettings from "./autoSettings.json";
 
 //variable declarations
-let state = "init", timer = 135, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
+let state = "init", timer = 150, delay = true, rowContent = new Map(), notesToggled = false, allianceColor = "n";
 
 let dataPoints = new Map();
 let timeInt = 1000; // Time Interval, SHOULD BE 1000, 10 if speed!!!!!!!
@@ -94,6 +94,16 @@ document.getElementById("initColor").addEventListener("click", () => {
 })
 allianceColor = "b";
 switchColor();
+
+document.getElementById("continue").addEventListener("click", () => {
+    if (state == "auto" && timer < 150) {
+        transition(2);
+    }
+    else if (state == "tele") {
+        transition(4);
+    }
+    console.log("Continue Button Clicked");
+});
 
 //always starts on red when app first launches
 function switchColor() {
@@ -224,7 +234,7 @@ function createAuto(page) {
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
         pointBox.addEventListener("click", () => {
-            if (data.type == "start") {
+            if (autoHistory.length == 1) {
                 timerStart()
                 startAudio.play();
                 resetAutoSettings();
@@ -253,19 +263,6 @@ function createAuto(page) {
     back.classList.add("autoButton");
     back.addEventListener("click", backupPoint);
     stateBox.appendChild(back);
-
-    if (autoHistory.length > 0) {
-        const continueBtn = document.createElement("p");
-        continueBtn.innerHTML = "CONTINUE";
-        continueBtn.id = "continueButton";
-        continueBtn.classList.add("autoButton");
-        continueBtn.addEventListener("click", () => {
-            if (timer != 150) transition(2);
-        })
-        back.style.marginRight = "1%";
-        stateBox.appendChild(continueBtn);
-    }
-
     box.appendChild(stateBox);
 
     canvas.width = field.width;
@@ -376,7 +373,7 @@ function backupPoint() {
     const point = autoPath.pop();
     if (point.inverseFunction != null) point.inverseFunction();
     createAuto(autoHistory.pop());
-    if (autoHistory.length == 0) {
+    if (autoHistory.length == 1) {
         clearInterval(timerFunction);
         document.getElementById("display-timer").innerHTML = "";
     }
@@ -406,6 +403,7 @@ function resetAuto() {
 
 //reads settings.js file, generates HTML for the app using that info
 function generateMainPage(stage) {
+    state = stage;
     document.getElementById("display-match").innerHTML = "Match:  " + dataPoints.get("Match Number");
     document.getElementById("display-team").innerHTML = "Team: " + dataPoints.get("Team Number");
     if (stage == "auto") {
@@ -775,7 +773,7 @@ function generateMainPage(stage) {
 
 //defines time length, starts timer 
 function timerStart(i) {
-    timer = 135;
+    timer = 150;
     delay = true;
     updateTimer();
     window.timerFunction = setInterval(updateTimer, timeInt)
@@ -788,11 +786,11 @@ function updateTimer() {
     }
     if (settings.imported.transitionMode == "auto") {
         if (timer == 135 && delay) { //janky implementation of 2 second auto to teleop delay
-            timer = 136; //136??? check delay
-            delay = !delay
+            // timer = 136; //136??? check delay
+            // delay = !delay
         }
         if (timer == 135 && !delay) {
-            state = "tele"
+            // state = "tele"
             // transition(2)
         }
         if (timer == 30) {
@@ -801,21 +799,21 @@ function updateTimer() {
             //this was removed because the endgame page was the same as the teleop page
         }
         if (timer == 0) {
-            console.log("Game over");
-            timer -= 1;
-            state = "after";
-            transition(4)
+            // console.log("Game over");
+            // timer -= 1;
+            // state = "after";
+            // transition(4)
         }
         if (timer > 0) {
             timer--;
         }
     }
-    if (timer == 0) {
-        console.log("Game over");
-        timer -= 1;
-        state = "after";
-        transition(4)
-    }
+    // if (timer == 0) {
+    //     console.log("Game over");
+    //     timer -= 1;
+    //     state = "after";
+    //     transition(4)
+    // }
 }
 
 function updateQr() {
@@ -1024,7 +1022,7 @@ setInterval(() => {
     }
 }, 1000)
 
-function transition(i) {
+function  transition(i) {
     if (i == 0 && state == "init") {
         dataPoints = new Map(getDataSettings());
         const scoutID = document.getElementById("initIdForm").value;
@@ -1087,13 +1085,13 @@ function transition(i) {
 
     }
     if (i == 1 && state == "standby") {
-        generateMainPage("auto")
+        generateMainPage("auto");
     }
     if (i == 2) {
         convertAutoPathToData(dataPoints, autoPath);
-        generateMainPage("tele")
+        generateMainPage("tele");
     }
-    if (i == 4 && state == "after") {
+    if (i == 4) {
         let removeElem = (settings.tele.length) * 3
         for (let i = 0; i < removeElem; i++) {
 
@@ -1101,13 +1099,12 @@ function transition(i) {
             mainPageElem.removeChild(mainPageElem.lastElementChild)
         }
         generateMainPage("after");
-
     }
 }
 
 function resetGame() {
     state = "init";
-    timer = 135;
+    timer = 150;
     delay = true;
     rowContent = new Map();
     incArr = [];
