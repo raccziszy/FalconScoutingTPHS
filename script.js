@@ -178,6 +178,13 @@ window.addEventListener('keydown', function (keystroke) {
     if (keystroke.key == " " && state == "standby") {
         transition(1)
     }
+
+    if (state == "auto") {
+        if (autoKeybinds.has(keystroke.key)) {
+            autoKeybinds.get(keystroke.key)();
+        }
+        return;
+    }
     for (let i = 0; i < uniqueKeys.length; i++) {
         var set = settings.auto[i];
         var tes = settings.tele[i];
@@ -211,9 +218,11 @@ const autoData = autoSettingsCopy;
 const fieldLength = autoData.get("fieldLength");
 var autoPath = [];
 var autoHistory = [];
+const autoKeybinds = new Map();
 // const autoData = new Map(JSON.parse(JSON.stringify(autoSettings)));
 
 function createAuto(page) {
+    autoKeybinds.clear();
     const autoPage = document.getElementById("autoPage");
     autoPage.innerHTML = "";
     autoPage.style.display = "flex";
@@ -231,21 +240,17 @@ function createAuto(page) {
         if (data.type == "remove" && autoPath.some(otherPoint => otherPoint.label == point.label)) continue;
         const pointBox = document.createElement("button");
         pointBox.innerHTML = point.display != null ? point.display : point.label;
+        if (point.trigger != null) {
+            autoKeybinds.set(point.trigger, ()=>{nextPoint(point, page)});
+            pointBox.innerHTML += " (" + point.trigger + ")";
+        }
         pointBox.id = point.label;
         pointBox.classList.add("autoButton");
         pointBox.addEventListener("click", () => {
-            if (autoHistory.length == 1) {
-                timerStart()
-                startAudio.play();
-                resetAutoSettings();
-            }
-            autoPath.push(point);
-            autoHistory.push(page);
-            if (point.function != null) point.function();
-            createAuto(point.next);
+            nextPoint(point, page);
         });
         box.appendChild(pointBox, false);
-        const coord = geAbsPosition(point);
+        const coord = getAbsPosition(point);
         const top = field.height - coord.y * pixelsPerMeter - pointBox.offsetHeight / 2;
         const left = coord.x * pixelsPerMeter - widthOffset - pointBox.offsetWidth / 2;
         pointBox.style.top = top + "px";
@@ -273,7 +278,19 @@ function createAuto(page) {
     drawPath(canvas, pixelsPerMeter);
 }
 
-function geAbsPosition(point) {
+function nextPoint(point, page) {
+    if (autoHistory.length == 1) {
+        timerStart()
+        startAudio.play();
+        resetAutoSettings();
+    }
+    autoPath.push(point);
+    autoHistory.push(page);
+    if (point.function != null) point.function();
+    createAuto(point.next);
+}
+
+function getAbsPosition(point) {
     const offset = getRelPosition(point, point.position, autoPath.length);
     if (point.position.toLowerCase().includes("quasi")) {
         point.x = offset.x;
@@ -371,7 +388,10 @@ function drawLine(ctx, prevPoint, point, pixelsPerMeter) {
 function backupPoint() {
     if (autoHistory.length == 0) return;
     const point = autoPath.pop();
-    if (point.inverseFunction != null) point.inverseFunction();
+    if (point.inverseFunction != null) {
+        console.log("FUCK");
+        point.inverseFunction();
+    }
     createAuto(autoHistory.pop());
     if (autoHistory.length == 1) {
         clearInterval(timerFunction);

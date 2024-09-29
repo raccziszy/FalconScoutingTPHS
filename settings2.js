@@ -46,7 +46,8 @@ autoSettingsCopy.set("score", {
             "y": 6.1,
             "next": "pickup",
             "position": "absolute",
-            "coord": [{x: 0, y: 5.55}]
+            "coord": [{x: 0, y: 5.55}],
+            "trigger": "a"
         },
         {
             "label": "Speaker Miss",
@@ -54,7 +55,8 @@ autoSettingsCopy.set("score", {
             "y": 5,
             "next": "pickup",
             "position": "absolute",
-            "coord": [{x: 0, y: 5.55}]
+            "coord": [{x: 0, y: 5.55}],
+            "trigger": "s"
         },
         {
             "label": "Amp Score",
@@ -89,8 +91,10 @@ autoSettingsCopy.set("score", {
                 UUIDCount++;
             },
             "inverseFunction": ()=> {
+                autoSettingsCopy.get("pickup").points.pop();
                 UUIDCount--;
-            }
+            },
+            "trigger": "s"
         }
     ]
 });
@@ -105,7 +109,8 @@ autoSettingsCopy.set("scoreHoard", {
             "y": 6.1,
             "next": "pickup",
             "position": "absolute",
-            "coord": [{x: 0, y: 5.55}]
+            "coord": [{x: 0, y: 5.55}],
+            "trigger": "a"
         },
         {
             "label": "Speaker Miss",
@@ -113,7 +118,8 @@ autoSettingsCopy.set("scoreHoard", {
             "y": 5,
             "next": "pickup",
             "position": "absolute",
-            "coord": [{x: 0, y: 5.55}]
+            "coord": [{x: 0, y: 5.55}],
+            "trigger": "d"
         },
         {
             "label": "Amp Score",
@@ -141,21 +147,24 @@ autoSettingsCopy.set("pickup", {
             "x": 2.9,
             "y": 7,
             "next": "intake",
-            "position": "absolute"
+            "position": "absolute",
+            "trigger": "d"
         },
         {
             "label": "note1.2",
             "x": 2.9,
             "y": 5.55,
             "next": "intake",
-            "position": "absolute"
+            "position": "absolute",
+            "trigger": "s"
         },
         {
             "label": "note1.3",
             "x": 2.9,
             "y": 4.1,
             "next": "intake",
-            "position": "absolute"
+            "position": "absolute",
+            "trigger": "a"
         },
         {
             "label": "note2.1",
@@ -163,7 +172,8 @@ autoSettingsCopy.set("pickup", {
             "y": 7.45,
             "next": "intakeMiddle",
             "position": "absolute",
-            "coord": [{x: 8.2423, y: 7.45}, {x: 5.57115, y: 6.725}]
+            "coord": [{x: 8.2423, y: 7.45}, {x: 5.57115, y: 6.725}],
+            "trigger": "t"
         },
         {
             "label": "note2.2",
@@ -171,7 +181,8 @@ autoSettingsCopy.set("pickup", {
             "y": 5.8,
             "next": "intakeMiddle",
             "position": "absolute",
-            "coord": [{x: 8.2423, y: 5.8}, {x: 5.57115, y: 6.525}]
+            "coord": [{x: 8.2423, y: 5.8}, {x: 5.57115, y: 6.525}],
+            "trigger": "r"
         },
         {
             "label": "note2.3",
@@ -179,7 +190,8 @@ autoSettingsCopy.set("pickup", {
             "y": 4.1,
             "next": "intakeMiddle",
             "position": "absolute",
-            "coord": [{x: 8.2423, y: 4.1}, {x: 5.57115, y: 4.1}, {x: 4, y: 5.5}]
+            "coord": [{x: 8.2423, y: 4.1}, {x: 5.57115, y: 4.1}, {x: 4, y: 5.5}],
+            "trigger": "e"
         },
         {
             "label": "note2.4",
@@ -187,7 +199,8 @@ autoSettingsCopy.set("pickup", {
             "y": 2.45,
             "next": "intakeMiddle",
             "position": "absolute",
-            "coord": [{x: 8.2423, y: 2.45}, {x: 5.57115, y: 1.7}]
+            "coord": [{x: 8.2423, y: 2.45}, {x: 5.57115, y: 1.7}],
+            "trigger": "w"
         },
         {
             "label": "note2.5",
@@ -195,7 +208,8 @@ autoSettingsCopy.set("pickup", {
             "y": 0.75,
             "next": "intakeMiddle",
             "position": "absolute",
-            "coord": [{x: 8.2423, y: 0.75}, {x: 5.57115, y: 1.5}]
+            "coord": [{x: 8.2423, y: 0.75}, {x: 5.57115, y: 1.5}],
+            "trigger": "q"
         }
     ]
 });
@@ -209,14 +223,16 @@ autoSettingsCopy.set("intake", {
             "x": 0,
             "y": 0.5,
             "next": "score",
-            "position": "relative"
+            "position": "relative",
+            "trigger": "v"
         },
         {
             "label": "Missed",
             "x": 0,
             "y": -0.5,
             "next": "pickup",
-            "position": "relative"
+            "position": "relative",
+            "trigger": " "
         }
     ]
 });
@@ -230,21 +246,24 @@ autoSettingsCopy.set("intakeMiddle", {
             "x": 0,
             "y": 0.5,
             "next": "score",
-            "position": "relative"
+            "position": "relative",
+            "trigger": "v"
         },
         {
             "label": "Beat",
             "x": 0,
             "y": 0,
             "next": "pickup",
-            "position": "relative"
+            "position": "relative",
+            "trigger": "f"
         },
         {
             "label": "Missed",
             "x": 0,
             "y": -0.5,
             "next": "pickup",
-            "position": "relative"
+            "position": "relative",
+            "trigger": " "
         }
     ]
 });
@@ -258,14 +277,16 @@ autoSettingsCopy.set("intakeHoard", {
             "x": 0,
             "y": 0.5,
             "next": "scoreHoard",
-            "position": "relative"
+            "position": "relative",
+            "trigger": "v"
         },
         {
             "label": "Missed",
             "x": 0,
             "y": -0.5,
             "next": "pickup",
-            "position": "relative"
+            "position": "relative",
+            "trigger": " "
         }
     ]
 });   
