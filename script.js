@@ -1022,7 +1022,7 @@ function clickEvt(type, loc, rev = null) {
 
     if (type == "transition") {
         if (confirm("Resetting game... Are you sure you have been scanned and given OK?")) {
-            localStorage.setItem(dataPoints.get("Match Num"), dataPoints);
+            localStorage.setItem(dataPoints.get("Match Number"), JSON.stringify(dataPoints, (key, value) => (value instanceof Map ? [...value] : value)));
             console.log("Final Data: " + dataPoints);
             resetGame()
         }
@@ -1156,15 +1156,41 @@ function resetGame() {
     //close out of note box
     document.getElementById('notes').blur()
 
+    const box1 = document.createElement("div");
+    box1.classList.add("flex");
+    const box2 = document.createElement("div");
+    box2.classList.add("flex");
     let displayMatch = document.createElement("div");
     displayMatch.setAttribute("id", "display-match");
-    displayBar.appendChild(displayMatch);
+    // displayBar.appendChild(displayMatch);
     let displayTimer = document.createElement("div");
     displayTimer.setAttribute("id", "display-timer");
-    displayBar.appendChild(displayTimer);
+    // displayBar.appendChild(displayTimer);
     let displayTeam = document.createElement("div");
     displayTeam.setAttribute("id", "display-team");
-    displayBar.appendChild(displayTeam);
+    // displayBar.appendChild(displayTeam);
+    let continueBtn = document.createElement("button");
+    continueBtn.setAttribute("id", "continue");
+    continueBtn.setAttribute("class", "autoButton");
+    continueBtn.innerHTML = "Continue";
+
+    continueBtn.addEventListener("click", () => {
+        if (state == "auto" && timer < 150) {
+            transition(2);
+        }
+        else if (state == "tele") {
+            transition(4);
+        }
+        console.log("Continue Button Clicked");
+    });
+
+    box1.appendChild(displayMatch);
+    box1.appendChild(displayTeam);
+    box2.appendChild(continueBtn);
+
+    displayBar.appendChild(box1);
+    displayBar.appendChild(displayTimer);
+    displayBar.appendChild(box2);
 
     mainPage.innerHTML += '<div id="reset" onclick="abortMatch()">Abort</div>';
     document.getElementById("mainPage").style.display = "none";
