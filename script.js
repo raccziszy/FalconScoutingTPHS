@@ -1173,16 +1173,7 @@ function resetGame() {
     continueBtn.setAttribute("id", "continue");
     continueBtn.setAttribute("class", "autoButton");
     continueBtn.innerHTML = "Continue";
-
-    continueBtn.addEventListener("click", () => {
-        if (state == "auto" && timer < 150) {
-            transition(2);
-        }
-        else if (state == "tele") {
-            transition(4);
-        }
-        console.log("Continue Button Clicked");
-    });
+    // console.log("Continue Button Created");
 
     box1.appendChild(displayMatch);
     box1.appendChild(displayTeam);
@@ -1203,6 +1194,16 @@ function resetGame() {
 
     document.getElementById("mainPage").classList.remove("afterPageContainer");
     document.getElementById("mainPage").classList.add("mainPage");
+
+    document.getElementById("continue").addEventListener("click", () => {
+        if (state == "auto" && timer < 150) {
+            transition(2);
+        }
+        else if (state == "tele") {
+            transition(4);
+        }
+        console.log("Continue Button Clicked");
+    });
 }
 
 //buffers for phase switching

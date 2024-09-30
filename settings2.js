@@ -56,7 +56,7 @@ autoSettingsCopy.set("score", {
             "next": "pickup",
             "position": "absolute",
             "coord": [{x: 0, y: 5.55}],
-            "trigger": "s"
+            "trigger": "d"
         },
         {
             "label": "Amp Score",
